@@ -12,7 +12,7 @@
 
 import random
 import numpy as np
-from solver import solve
+from utils.solver import solve
 
 
 def generate_durations(n, start_range, end_range):
@@ -33,7 +33,7 @@ def generate_ds(start_range=1, end_range=30):
     return int(np.random.normal(loc, scale))
 
 
-def generate_proble_data(n=5, start_range=1, end_range=30):
+def generate_problem_data(n=5, start_range=1, end_range=30):
     """Ця функція генерує дані для задачі - тривалості, директивний строк та тип задачі"""
 
     durations = generate_durations(n, start_range, end_range)
@@ -48,7 +48,7 @@ if __name__ == "__main__":
     print(
         f"+{'-' * 102}+\n|{'Тривалості робіт':^20}|{'Дир. строк':^12}|{'Досягає':^12}|{'Запізнюється':^14}|{'Оптимальний розклад':^22}|{'Опт.знач.крит.':^17}|\n+{'-' * 102}+")
     for _ in range(50):
-        durations, ds, is_min_task, is_delayed = generate_proble_data(n=5, start_range=1, end_range=15)
+        durations, ds, is_min_task, is_delayed = generate_problem_data(n=5, start_range=1, end_range=15)
         res, crit_val = solve(durations, ds, is_min_task, is_delayed)
         print(
             f"|{' '.join(map(str, durations)):^20}|{ds:^12}|{('Максимум', 'Мінімум')[is_min_task]:^12}|{('Ні', 'Так')[is_delayed]:^14}|{res:^22}|{crit_val:^17}|")

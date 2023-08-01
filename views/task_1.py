@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, make_response
-from utils.generate_xml import generate_file
+from utils.generate_xml import generate_quiz_xml
 
 task1 = Blueprint('task1', __name__)
 
@@ -11,7 +11,7 @@ def task1_page():
         start_range = int(request.form["start_range"])
         end_range = int(request.form["end_range"])
 
-        xml_content = generate_file(amount, start_range, end_range)
+        xml_content = generate_quiz_xml(amount, start_range, end_range)
 
         # Create a response with appropriate headers to force file download
         response = make_response(xml_content)
