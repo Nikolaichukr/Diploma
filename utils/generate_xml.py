@@ -11,7 +11,7 @@ def tab():
 
 
 def create_question_element(i, start_range, end_range, n):
-    question = ET.Element('question', type='cloze')
+    question = ET.Element('question', type='ddwtos')
 
     # Adding the 'name' element
     name = ET.SubElement(question, 'name')
@@ -27,10 +27,8 @@ def create_question_element(i, start_range, end_range, n):
 
     questiontext_text.text = f"""
         <![CDATA[
-        <p><span lang="uk"> 
-        Для
-        системи з&nbsp;</span><span lang="EN-US"><i>n</i> = {n}, <i>m</i> = 1</span><span lang="RU">&nbsp;скласти розклад у якого досягає <b>{['максимуму', 'мінімуму'][is_min_task]} кількість робіт, що {['НЕ ', ''][is_delayed]}запізнюються</b>.</span></p>
-        <p><span lang="EN-US"></span></p>
+        <p dir="ltr"">Для системи з <i>n</i> = {n}, <i>m</i> = 1 скласти розклад у якого досягає <b>{['максимуму', 'мінімуму'][is_min_task]} кількість робіт, що {['НЕ ', ''][is_delayed]}запізнюються</b>.</p>
+
         <table width="280" cellspacing="0" cellpadding="0" border="2">
             <colgroup>
                 <col width="36" span="5">
@@ -54,11 +52,10 @@ def create_question_element(i, start_range, end_range, n):
 
             </tbody>
         </table>
-        <span>
         <br>
-        <i style="">У разі наявності альтернативних розкладів використовувати круглі дужки, в середині кожної групи номери робіт вказувати через пробіл за зрозтанням. Наприклад: (3 5) (1 2 4)</i>
-        <span><br><b>Оптимальний р</b></span><b>озклад&nbsp;</b>(<span lang="uk">номери робіт через пробіл)</span>: {{1:SA:= {res} ~%100%{res}}}<br><br><b>Опт. значення критерія</b>:&nbsp;{{1:SA:= {crit_val}}}&nbsp;</span><br><br><br><br>
-        <p></p>]]>
+        <p dir="ltr" style="text-align: left;">Оптимальний розклад: {' '.join([f'[[{i+1}]]' for i in range(len(res.replace(' ', '')))])}</p>
+        <p dir="ltr" style="text-align: left;">Опт. значення критерія: [[{len(res.replace(' ', '')) + 1}]]</p>
+        ]]>
     """
 
     # Adding the 'generalfeedback' element
@@ -77,6 +74,20 @@ def create_question_element(i, start_range, end_range, n):
     # Adding the 'idnumber' element
     idnumber = ET.SubElement(question, 'idnumber')
     idnumber.text = ''
+
+    for symbol in res:
+        if symbol.strip():
+            dragbox = ET.SubElement(question, 'dragbox')
+            dragbox_text = ET.SubElement(dragbox, 'text')
+            dragbox_text.text = symbol
+            dragbox_group = ET.SubElement(dragbox, 'group')
+            dragbox_group.text = '1'
+
+    dragbox = ET.SubElement(question, 'dragbox')
+    dragbox_text = ET.SubElement(dragbox, 'text')
+    dragbox_text.text = str(ds)
+    dragbox_group = ET.SubElement(dragbox, 'group')
+    dragbox_group.text = '2'
 
     return question
 

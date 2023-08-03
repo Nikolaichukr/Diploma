@@ -52,7 +52,7 @@ def solve(durations, ds, is_min_task, is_delayed):
             break
 
     # Формування результату, в залежності від опт. знач. критерія
-    if num_elements == 0:
+    if num_elements == 0 or num_elements == len(slist):
         res = f"({format_output(slist)})"
     elif num_elements == 1:
         res = f"{slist[0][0]} ({format_output(slist[num_elements:])})"

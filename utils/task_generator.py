@@ -21,23 +21,41 @@ def generate_durations(n, start_range, end_range):
     if n > (end_range - start_range + 1):
         raise ValueError(f"Cannot generate {n} unique numbers in the given range")
 
-    return [int(i // 1.4) for i in random.sample(range(start_range, end_range + 1), n)]
+    mu, sigma = calculate_mu_sigma(start_range, end_range)
+
+    random_numbers = []
+    while len(random_numbers) < n:
+        number = int(random.normalvariate(mu, sigma))
+        if start_range <= number <= end_range and number not in random_numbers:
+            random_numbers.append(number)
+
+    return random_numbers
 
 
-def generate_ds(start_range=1, end_range=30):
+def generate_ds(mu, sigma):
     """Ця функція генерує значення директивного строку з використанням нормального розподілу"""
 
-    loc = (start_range + end_range) / 2
-    scale = (end_range - start_range) / 6
-
-    return int(np.random.normal(loc, scale))
+    return int(np.random.normal(mu, sigma))
 
 
-def generate_problem_data(n=5, start_range=1, end_range=30):
+def calculate_mu_sigma(start_range, end_range):
+    """Функція для генерації значень mu та sigma, де
+
+    mu - середнє значення діапазону, навколо якого групуватимуться згенеровані числа;
+    sigma - стандартне відхилення, визначає дисперсію (відхилення чисел від середнього значення).
+    """
+
+    mu = (start_range + end_range) / 2
+    sigma = (end_range - start_range) / 6
+
+    return mu, sigma
+
+
+def generate_problem_data(start_range, end_range, n=5):
     """Ця функція генерує дані для задачі - тривалості, директивний строк та тип задачі"""
 
     durations = generate_durations(n, start_range, end_range)
-    ds = generate_ds(start_range, end_range)
+    ds = generate_ds(*calculate_mu_sigma(start_range, sum(durations)))
     is_min_task = random.choice([True, False])
     is_delayed = random.choice([True, False])
 

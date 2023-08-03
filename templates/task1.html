@@ -8,13 +8,13 @@
     <div class="container">
         <h1>Generate XML File</h1>
         <form method="post" action="{{ url_for('task1.task1_page') }}">
-            <label for="amount">Кількість тестів у файлі:</label>
+            <label for="amount">Кількість тестових питань:</label>
             <input type="number" name="amount" required><br>
 
-            <label for="start_range">Start Range:</label>
+            <label for="start_range">Початок діапазону:</label>
             <input type="number" name="start_range" required><br>
 
-            <label for="end_range">End Range:</label>
+            <label for="end_range">Кінець діапазону:</label>
             <input type="number" name="end_range" required><br>
 
             <input type="submit" value="Згенерувати Moodle XML">

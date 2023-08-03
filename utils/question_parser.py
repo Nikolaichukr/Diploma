@@ -59,7 +59,7 @@ def display_problem_info(job_durations, ds, opt_schedule, opt_crit_value, solver
 
 
 if __name__ == "__main__":
-    xml_file_path = "60_питань.xml"
+    xml_file_path = "../data/60_questions.xml"
     quiz_tags = extract_quiz_tags(xml_file_path)
     if quiz_tags:
         quiz_amount, ok_quizes = len(quiz_tags), 0
