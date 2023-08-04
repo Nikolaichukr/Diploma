@@ -60,7 +60,7 @@ def solve(durations, ds, is_min_task, is_delayed):
         res = f"({format_output(slist[:num_elements])}) {slist[-1][0]}"
     else:
         res = f"({format_output(slist[:num_elements])}) ({format_output(slist[num_elements:])})"
-    return res, num_elements
+    return res, (num_elements, len(durations) - num_elements)[is_delayed]
 
 
 if __name__ == "__main__":

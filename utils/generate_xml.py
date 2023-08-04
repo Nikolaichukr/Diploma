@@ -10,20 +10,33 @@ def tab():
     return "\n\t\t\t"
 
 
+def add_tag(parent_element, tag, value):
+    new_tag = ET.SubElement(parent_element, tag)
+    new_tag.text = value
+
+
+def add_dragbox(parent_tag, symbol, group):
+    dragbox = ET.SubElement(parent_tag, 'dragbox')
+    dragbox_text = ET.SubElement(dragbox, 'text')
+    dragbox_text.text = symbol
+    dragbox_group = ET.SubElement(dragbox, 'group')
+    dragbox_group.text = group
+    ET.SubElement(dragbox, 'infinite')
+
+
 def create_question_element(i, start_range, end_range, n):
     question = ET.Element('question', type='ddwtos')
 
-    # Adding the 'name' element
     name = ET.SubElement(question, 'name')
-    name_text = ET.SubElement(name, 'text')
-    name_text.text = f'Згенероване_Питання_{i}'
+    add_tag(name, 'text', f'Згенероване_Питання_{i:03}')
 
-    # Adding the 'questiontext' element
     questiontext = ET.SubElement(question, 'questiontext', format='html')
     questiontext_text = ET.SubElement(questiontext, 'text')
 
     durations, ds, is_min_task, is_delayed = generate_problem_data(n=n, start_range=start_range, end_range=end_range)
     res, crit_val = solve(durations, ds, is_min_task, is_delayed)
+    options = '(' + ''.join([str(i + 1) for i in range(len(durations))]) + ')'
+    group_b = ''.join(map(str, range(len(durations) + 1)))
 
     questiontext_text.text = f"""
         <![CDATA[
@@ -47,47 +60,30 @@ def create_question_element(i, start_range, end_range, n):
 
         <tr height="25">
             <td style="text-align: center;" width="36" height="25"><i><span><b>дир. строк</b></span></i></td>
-            {tab().join([f"<td style='text-align: center;' width='36'><span><b>{ds}</b></span></td>" for d in range(n)])}
+            {tab().join([f"<td style='text-align: center;' width='36'><span><b>{ds}</b></span></td>" for _ in range(n)])}
         </tr>
 
             </tbody>
         </table>
         <br>
-        <p dir="ltr" style="text-align: left;">Оптимальний розклад: {' '.join([f'[[{i+1}]]' for i in range(len(res.replace(' ', '')))])}</p>
-        <p dir="ltr" style="text-align: left;">Опт. значення критерія: [[{len(res.replace(' ', '')) + 1}]]</p>
+        <p dir="ltr" style="text-align: left;">Оптимальний розклад: {' '.join([f'[[{options.index(i) + 1}]]' for i in res.replace(' ', '')])}</p>
+        <p dir="ltr" style="text-align: left;">Опт. значення критерія: [[{len(options) + group_b.index(str(crit_val)) + 1}]]</p>
         ]]>
     """
 
     # Adding the 'generalfeedback' element
     generalfeedback = ET.SubElement(question, 'generalfeedback', format='html')
-    generalfeedback_text = ET.SubElement(generalfeedback, 'text')
-    generalfeedback_text.text = ''
+    add_tag(generalfeedback, 'text', '')
+    add_tag(question, 'penalty', '0.3333333')
+    add_tag(question, 'hidden', '0')
+    add_tag(question, 'idnumber', '')
+    add_tag(question, 'shuffleanswers', '0')
 
-    # Adding the 'penalty' element
-    penalty = ET.SubElement(question, 'penalty')
-    penalty.text = '0.3333333'
+    for option in options:
+        add_dragbox(parent_tag=question, symbol=option, group='1')
 
-    # Adding the 'hidden' element
-    hidden = ET.SubElement(question, 'hidden')
-    hidden.text = '0'
-
-    # Adding the 'idnumber' element
-    idnumber = ET.SubElement(question, 'idnumber')
-    idnumber.text = ''
-
-    for symbol in res:
-        if symbol.strip():
-            dragbox = ET.SubElement(question, 'dragbox')
-            dragbox_text = ET.SubElement(dragbox, 'text')
-            dragbox_text.text = symbol
-            dragbox_group = ET.SubElement(dragbox, 'group')
-            dragbox_group.text = '1'
-
-    dragbox = ET.SubElement(question, 'dragbox')
-    dragbox_text = ET.SubElement(dragbox, 'text')
-    dragbox_text.text = str(ds)
-    dragbox_group = ET.SubElement(dragbox, 'group')
-    dragbox_group.text = '2'
+    for symbol in group_b:
+        add_dragbox(parent_tag=question, symbol=symbol, group='2')
 
     return question
 
