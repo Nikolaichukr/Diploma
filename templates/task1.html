@@ -2,23 +2,31 @@
 <html>
 <head>
     <title>Generate XML</title>
-    <link type="text/css" href="{{ url_for('static', filename='css/styles.css')}}" rel="stylesheet" />
+    <link type="text/css" href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet"/>
 </head>
 <body>
-    <div class="container">
-        <h1>Generate XML File</h1>
-        <form method="post" action="{{ url_for('task1.task1_page') }}">
-            <label for="amount">Кількість тестових питань:</label>
-            <input type="number" name="amount" required><br>
+<div class="container">
+    <h1>Меню генерації XML файлу завдань</h1>
+    <form method="post" action="{{ url_for('task1.task1_page') }}">
+        <label for="amount">Кількість тестових питань:</label>
+        <input type="number" name="amount" id="amount" min="1" required>
 
-            <label for="start_range">Початок діапазону:</label>
-            <input type="number" name="start_range" required><br>
+        <div class="range-container">
+            <label>Діапазон значень тривалостей</label>
+            <div class="input-field-container">
+                <div class="input-field">
+                    <label for="start_range">Початок:</label>
+                    <input type="number" name="start_range" id="start_range" min="1" required>
+                </div>
+                <div class="input-field">
+                    <label for="end_range">Кінець:</label>
+                    <input type="number" name="end_range" id="end_range" min="6" required>
+                </div>
+            </div>
+        </div>
 
-            <label for="end_range">Кінець діапазону:</label>
-            <input type="number" name="end_range" required><br>
-
-            <input type="submit" value="Згенерувати Moodle XML">
-        </form>
-    </div>
+        <input type="submit" value="Згенерувати XML файл">
+    </form>
+</div>
 </body>
 </html>
