@@ -1,32 +1,79 @@
 <!DOCTYPE html>
-<html>
+<html lang="uk">
 <head>
+    <meta charset="UTF-8">
     <title>Generate XML</title>
-    <link type="text/css" href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet"/>
+    <link type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet"/>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
 </head>
 <body>
-<div class="container">
-    <h1>Меню генерації XML файлу завдань</h1>
-    <form method="post" action="{{ url_for('task1.task1_page') }}">
-        <label for="amount">Кількість тестових питань:</label>
-        <input type="number" name="amount" id="amount" min="1" required>
 
-        <div class="range-container">
-            <label>Діапазон значень тривалостей</label>
-            <div class="input-field-container">
-                <div class="input-field">
-                    <label for="start_range">Початок:</label>
-                    <input type="number" name="start_range" id="start_range" min="1" required>
+<div class="position-fixed" style="top: 25px; left: 25px;">
+    <a href="/" class="btn btn-primary"> <span aria-hidden="true">&larr;</span> На головну</a>
+</div>
+
+<div class="jumbotron d-flex align-items-center min-vh-100">
+    <div class="container w-50 border border-3 border-secondary rounded-4 px-5">
+        <h1 class="text-center">Категорія тестових питань</h1>
+        <h2 class="text-center">1 | dj=d | SUM Uj -> min</h2>
+        <div class="container border border-2 border-secondary rounded-2 my-4 py-2">
+            <h5>Дано:</h5>
+            <span>1 машина, n робіт.<br>
+                pj - тривалості робіт, j=1,...,n. d - спільний директивний строк.<br>
+                Скласти розклад, за якого досягає мінімуму кількість робіт, що запізнюються.
+            </span>
+        </div>
+        <form method="post" action="{{ url_for('task1.task1_page') }}">
+            <div class="container border border-2 border-secondary rounded-2 my-4 py-2">
+                <h5>Параметри робіт</h5>
+                <div class="row mb-3">
+                    <label for="amountFrom" class="col-sm-3 col-form-label">Кількість робіт:</label>
+                    <div class="col-sm-9">
+                        <div class="input-group">
+                            <span class="input-group-text">Від</span>
+                            <input type="number" min="4" class="form-control" name="jobs_amount_min"
+                                   placeholder="Введіть кількість" required>
+                            <span class="input-group-text">До</span>
+                            <input type="number" min="4" class="form-control" name="jobs_amount_max"
+                                   placeholder="Введіть кількість" required>
+                        </div>
+                    </div>
                 </div>
-                <div class="input-field">
-                    <label for="end_range">Кінець:</label>
-                    <input type="number" name="end_range" id="end_range" min="6" required>
+                <div class="row mb-3">
+                    <label for="amountFrom" class="col-sm-3 col-form-label">Тривалості робіт:</label>
+                    <div class="col-sm-9">
+                        <div class="input-group">
+                            <span class="input-group-text">Від</span>
+                            <input type="number" min="1" class="form-control" name="jobs_duration_min"
+                                   placeholder="Введіть кількість" required>
+                            <span class="input-group-text">До</span>
+                            <input type="number" min="1" class="form-control" name="jobs_duration_max"
+                                   placeholder="Введіть кількість" required>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <input type="submit" value="Згенерувати XML файл">
-    </form>
+            <div class="container border border-2 border-secondary rounded-2 my-4 py-2">
+                <h5>Параметри категорії питань</h5>
+                <div class="row mb-3">
+                    <label for="amount" class="col-sm-4 col-form-label">Кількість тестових питань:</label>
+                    <div class="col-sm-8">
+                        <input type="number" min="1" class="form-control" name="tests_amount"
+                               placeholder="Введіть кількість" required>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="amount" class="col-sm-4 col-form-label">Назва тестових питань:</label>
+                    <div class="col-sm-8">
+                        <input class="form-control" name="test_name" placeholder="Введіть назву" required>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center mb-3 mx-2">
+                <button type="submit" class="btn btn-primary">Згенерувати тестові питання</button>
+            </div>
+        </form>
+    </div>
 </div>
 </body>
 </html>
