@@ -15,21 +15,26 @@ import numpy as np
 from utils.solver import solve
 
 
-def generate_durations(n, start_range, end_range):
-    """Ця функція генерує n випадкових чисел з заданого діапазону"""
+def generate_durations(jobs_amount, jobs_duration_min, jobs_duration_max):
+    """Ця функція генерує jobs_amount випадкових чисел з заданого діапазону [jobs_duration_min; jobs_duration_max]"""
 
-    if n > (end_range - start_range + 1):
-        raise ValueError(f"Cannot generate {n} unique numbers in the given range")
+    if jobs_amount > (jobs_duration_max - jobs_duration_min + 1):
+        raise ValueError(
+            f"Неможливо згенерувати {jobs_amount} робіт з унікальною тривалістю з діапазону [{jobs_duration_min}; {jobs_duration_max}]"
+        )
 
-    mu, sigma = calculate_mu_sigma(start_range, end_range)
+    mu, sigma = calculate_mu_sigma(jobs_duration_min, jobs_duration_max)
 
-    random_numbers = []
-    while len(random_numbers) < n:
+    job_durations = []
+    while len(job_durations) < jobs_amount:
         number = int(random.normalvariate(mu, sigma))
-        if start_range <= number <= end_range and number not in random_numbers:
-            random_numbers.append(number)
+        if (
+            jobs_duration_min <= number <= jobs_duration_max
+            and number not in job_durations
+        ):
+            job_durations.append(number)
 
-    return random_numbers
+    return job_durations
 
 
 def generate_ds(mu, sigma):
@@ -51,23 +56,32 @@ def calculate_mu_sigma(start_range, end_range):
     return mu, sigma
 
 
-def generate_problem_data(start_range, end_range, n=5):
+def generate_problem_data(
+    jobs_amount_min, jobs_amount_max, jobs_duration_min, jobs_duration_max
+):
     """Ця функція генерує дані для задачі - тривалості, директивний строк та тип задачі"""
 
-    durations = generate_durations(n, start_range, end_range)
-    ds = generate_ds(*calculate_mu_sigma(start_range, sum(durations)))
+    jobs_amount = random.randint(jobs_amount_min, jobs_amount_max)
+    job_durations = generate_durations(
+        jobs_amount, jobs_duration_min, jobs_duration_max
+    )
+    ds = generate_ds(*calculate_mu_sigma(jobs_duration_min, sum(job_durations)))
     is_min_task = random.choice([True, False])
     is_delayed = random.choice([True, False])
 
-    return durations, ds, is_min_task, is_delayed
+    return jobs_amount, job_durations, ds, is_min_task, is_delayed
 
 
 if __name__ == "__main__":
     print(
-        f"+{'-' * 102}+\n|{'Тривалості робіт':^20}|{'Дир. строк':^12}|{'Досягає':^12}|{'Запізнюється':^14}|{'Оптимальний розклад':^22}|{'Опт.знач.крит.':^17}|\n+{'-' * 102}+")
+        f"+{'-' * 102}+\n|{'Тривалості робіт':^20}|{'Дир. строк':^12}|{'Досягає':^12}|{'Запізнюється':^14}|{'Оптимальний розклад':^22}|{'Опт.знач.крит.':^17}|\n+{'-' * 102}+"
+    )
     for _ in range(50):
-        durations, ds, is_min_task, is_delayed = generate_problem_data(n=5, start_range=1, end_range=15)
-        res, crit_val = solve(durations, ds, is_min_task, is_delayed)
+        jobs_amount, job_durations, ds, is_min_task, is_delayed = generate_problem_data(
+            jobs_amount_min=5, jobs_amount_max=7, jobs_duration_min=3, jobs_duration_max=10
+        )
+        res, crit_val = solve(job_durations, ds, is_min_task, is_delayed)
         print(
-            f"|{' '.join(map(str, durations)):^20}|{ds:^12}|{('Максимум', 'Мінімум')[is_min_task]:^12}|{('Ні', 'Так')[is_delayed]:^14}|{res:^22}|{crit_val:^17}|")
+            f"|{' '.join(map(str, job_durations)):^20}|{ds:^12}|{('Максимум', 'Мінімум')[is_min_task]:^12}|{('Ні', 'Так')[is_delayed]:^14}|{res:^22}|{crit_val:^17}|"
+        )
     print(f"+{'-' * 102}+")

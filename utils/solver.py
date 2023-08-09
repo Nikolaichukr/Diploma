@@ -23,7 +23,7 @@ ds = 21
 def normalize_schedule_string(opt_schedule):
     """
     Видалення пробілів між дужками порівняння результатів з мудла з результатами роботи скрипта
-    Приклад: (2 5) (1 3 4) --> (2 5)(1 3 4)    
+    Приклад: (2 5) (1 3 4) --> (2 5)(1 3 4)
     """
 
     return opt_schedule.replace(") ", ")").replace(" (", "(")
@@ -32,16 +32,20 @@ def normalize_schedule_string(opt_schedule):
 def format_output(lst):
     """Функція для форматування результату"""
 
-    return ' '.join(sorted(map(lambda x: str(x[0]), lst)))
+    return " ".join(sorted(map(lambda x: str(x[0]), lst)))
 
 
 def solve(durations, ds, is_min_task, is_delayed):
     """Алгоритм вирішення задачі, на основі вхідних даних (тривалостей робіт, директивного строку та типу задачі - макс/мін)"""
 
     # нумерація робіт та сортування в залежності від типу задачі (макс/мін)
-    slist = list(sorted([(i, x) for i, x in enumerate(durations, start=1)], key=lambda x: x[1],
-                        reverse=is_min_task ^ is_delayed))
-
+    slist = list(
+        sorted(
+            [(i, x) for i, x in enumerate(durations, start=1)],
+            key=lambda x: x[1],
+            reverse=is_min_task ^ is_delayed,
+        )
+    )
     # визначення опт. значення критерія
     current_sum, num_elements = 0, 0
     for num in list(map(lambda x: x[1], slist)):
