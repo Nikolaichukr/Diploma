@@ -2,7 +2,6 @@
 # Мінімуму  (MIN = True)    +   НЕ ЗАПІЗНЮЄТЬСЯ (DELAYED = False)  ->  Спочатку йдуть довші   (сортування за спаданням)   (reverse = True)
 # Максимуму (MIN = False)   +   ЗАПІЗНЮЄТЬСЯ    (DELAYED = True)   ->  Спочатку йдуть довші   (сортування за спаданням)   (reverse = True)
 # Мінімуму  (MIN = True)    +   ЗАПІЗНЮЄТЬСЯ    (DELAYED = True)   ->  Спочатку йдуть коротші (сортування за зростанням)  (reverse = False)
-import math
 from typing import List
 from math import factorial
 
@@ -66,7 +65,7 @@ def solve(durations: List[int], ds: int, is_min_task: bool, is_delayed: bool):
     else:
         res = f"({format_output(slist[:num_elements])}) ({format_output(slist[num_elements:])})"
 
-    opt_count = math.factorial(num_elements) * math.factorial(len(durations) - num_elements)
+    opt_count = factorial(num_elements) * factorial(len(durations) - num_elements)
 
     return res, (num_elements, len(durations) - num_elements)[is_delayed], opt_count
 

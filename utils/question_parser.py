@@ -28,8 +28,8 @@ def extract_data_from_quiz(quiz):
         raw_data_list = list(map(lambda td: td.text, tds))
         ds = int(raw_data_list[-1].strip())
         job_durations = list(map(int, raw_data_list[-11:-6]))
-        opt_schedule = text[text.index(":=") + 2 : text.rindex("~%")].strip()
-        opt_crit_value = int(text[text.rindex(":=") + 2 : text.rindex("}")].strip())
+        opt_schedule = text[text.index(":=") + 2:text.rindex("~%")].strip()
+        opt_crit_value = int(text[text.rindex(":=") + 2:text.rindex("}")].strip())
         is_min_task = "мінімуму" in text
         return job_durations, ds, opt_schedule, opt_crit_value, is_min_task
     else:
@@ -55,7 +55,7 @@ def display_problem_info(
     print(f"Тривалості робіт: {job_durations}")
     print(f"Директивний строк: {ds}")
 
-    print("\nPезультати з Moodle:\n")
+    print("\nРезультати з Moodle:\n")
     print(f"Оптимальний розклад: {opt_schedule}")
     print(f"Опт. значення критерія: {opt_crit_value}")
 
@@ -68,34 +68,34 @@ def display_problem_info(
 
 if __name__ == "__main__":
     xml_file_path = "../data/60_questions.xml"
-    quiz_tags = extract_quiz_tags(xml_file_path)
-    if quiz_tags:
-        quiz_amount, ok_quizes = len(quiz_tags), 0
-        for quiz in quiz_tags:
+    _quiz_tags = extract_quiz_tags(xml_file_path)
+    if _quiz_tags:
+        quiz_amount, ok_quizzes = len(_quiz_tags), 0
+        for _quiz in _quiz_tags:
             (
-                job_durations,
-                ds,
-                opt_schedule,
-                opt_crit_value,
-                is_min_task,
-            ) = extract_data_from_quiz(quiz)
-            solver_opt_schedule, solver_opt_crit_value = solve(
-                job_durations, ds, is_min_task, is_delayed=False
+                _job_durations,
+                _ds,
+                _opt_schedule,
+                _opt_crit_value,
+                _is_min_task,
+            ) = extract_data_from_quiz(_quiz)
+            _solver_opt_schedule, _solver_opt_crit_value, opt_count = solve(
+                _job_durations, _ds, _is_min_task, is_delayed=False
             )
-            if solver_opt_crit_value == opt_crit_value and normalize_schedule_string(
-                solver_opt_schedule
-            ) == normalize_schedule_string(opt_schedule):
-                ok_quizes += 1
+            if _solver_opt_crit_value == _opt_crit_value and normalize_schedule_string(
+                _solver_opt_schedule
+            ) == normalize_schedule_string(_opt_schedule):
+                ok_quizzes += 1
             else:
                 display_problem_info(
-                    job_durations,
-                    ds,
-                    opt_schedule,
-                    opt_crit_value,
-                    solver_opt_schedule,
-                    solver_opt_crit_value,
-                    is_min_task,
+                    _job_durations,
+                    _ds,
+                    _opt_schedule,
+                    _opt_crit_value,
+                    _solver_opt_schedule,
+                    _solver_opt_crit_value,
+                    _is_min_task,
                 )
-        print(f"\nЗагальний результат: {ok_quizes}/{quiz_amount}\n")
+        print(f"\nЗагальний результат: {ok_quizzes}/{quiz_amount}\n")
     else:
         print("No <quiz> tags found in the XML file.")

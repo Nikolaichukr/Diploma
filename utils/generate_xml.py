@@ -3,6 +3,7 @@ from html import unescape
 from lxml import etree
 from utils.solver import solve
 from utils.task_generator import generate_problem_data
+from math import factorial
 
 
 def tab():
@@ -23,9 +24,9 @@ def add_dragbox(parent_tag, symbol, group):
 
     dragbox = ET.SubElement(parent_tag, "dragbox")
     dragbox_text = ET.SubElement(dragbox, "text")
-    dragbox_text.text = symbol
+    dragbox_text.text = str(symbol)
     dragbox_group = ET.SubElement(dragbox, "group")
-    dragbox_group.text = group
+    dragbox_group.text = str(group)
     ET.SubElement(dragbox, "infinite")
 
 
@@ -50,9 +51,19 @@ def create_question_element(
         is_delayed,
     )
     res, crit_val, opt_count = solve(job_durations, ds, is_min_task, is_delayed)
-    options = "(" + "".join([str(i + 1) for i in range(jobs_amount)]) + ")"
-    group_b = "".join(map(str, range(jobs_amount + 1)))
-
+    opt_solution_options = "(" + "".join([str(i + 1) for i in range(jobs_amount)]) + ")"
+    opt_crit_val_options = "".join(map(str, range(jobs_amount + 1)))
+    alter_amount_options = list(
+        sorted(
+            set(
+                [
+                    factorial(i - j) * factorial(j)
+                    for i in range(jobs_amount + 1)
+                    for j in range(i // 2 + 1)
+                ]
+            )
+        )
+    )
     question = ET.Element("question", type="ddwtos")
 
     name = ET.SubElement(question, "name")
@@ -89,9 +100,9 @@ def create_question_element(
             </tbody>
         </table>
         <br>
-        <p dir="ltr" style="text-align: left;">Оптимальний розклад: {' '.join([f'[[{options.index(i) + 1}]]' for i in res.replace(' ', '')])}</p>
-        <p dir="ltr" style="text-align: left;">Опт. значення критерія: [[{len(options) + group_b.index(str(crit_val)) + 1}]]</p>
-        <p dir="ltr" style="text-align: left;">Кількість оптимальних розкладів: Work in Progress</p>
+        <p dir="ltr" style="text-align: left;">Оптимальний розклад: {' '.join([f'[[{opt_solution_options.index(i) + 1}]]' for i in res.replace(' ', '')])}</p>
+        <p dir="ltr" style="text-align: left;">Опт. значення критерія: [[{len(opt_solution_options) + opt_crit_val_options.index(str(crit_val)) + 1}]]</p>
+        <p dir="ltr" style="text-align: left;">Кількість оптимальних розкладів: [[{len(opt_solution_options) + len(opt_crit_val_options) + alter_amount_options.index(opt_count) + 1}]]</p>
         ]]>
     """
 
@@ -103,11 +114,14 @@ def create_question_element(
     add_tag(question, "idnumber", "")
     add_tag(question, "shuffleanswers", "0")
 
-    for option in options:
-        add_dragbox(parent_tag=question, symbol=option, group="1")
+    for option in opt_solution_options:
+        add_dragbox(parent_tag=question, symbol=option, group=1)
 
-    for symbol in group_b:
-        add_dragbox(parent_tag=question, symbol=symbol, group="2")
+    for symbol in opt_crit_val_options:
+        add_dragbox(parent_tag=question, symbol=symbol, group=2)
+
+    for option in alter_amount_options:
+        add_dragbox(parent_tag=question, symbol=option, group=3)
 
     return question
 

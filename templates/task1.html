@@ -7,7 +7,8 @@
 <div class="jumbotron d-flex align-items-center min-vh-100">
     <div class="container w-50 border border-3 border-secondary rounded-4 px-5">
         <h1 class="text-center">Категорія тестових питань</h1>
-        <h2 class="text-center">1 | d<sub>j</sub>=d | <span>&Sigma;</span>U<sub>j</sub> → {{ 'min' if is_min else 'max' }}</h2>
+        <h2 class="text-center">1 | d<sub>j</sub>=d | <span>&Sigma;</span>U<sub>j</sub>
+            → {{ 'min' if is_min else 'max' }}</h2>
         <div class="container border border-2 border-secondary rounded-2 my-4 py-2">
             <h5>Дано:</h5>
             <span>1 машина, n робіт.<br>
@@ -50,7 +51,7 @@
                 <div class="row mb-3">
                     <label for="amount" class="col-sm-4 col-form-label">Кількість тестових питань:</label>
                     <div class="col-sm-8">
-                        <input type="number" min="1" class="form-control" name="tests_amount"
+                        <input type="number" min="1" max="9999" class="form-control" name="tests_amount"
                                placeholder="Введіть кількість" required>
                     </div>
                 </div>
