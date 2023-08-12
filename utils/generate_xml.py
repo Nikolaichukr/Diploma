@@ -1,21 +1,26 @@
 import xml.etree.ElementTree as ET
 from html import unescape
 from lxml import etree
-
 from utils.solver import solve
 from utils.task_generator import generate_problem_data
 
 
 def tab():
+    """Повертає комбінацію перенесення каретки та табуляції, потрібна виключно для візуального відображення"""
+
     return "\n\t\t\t"
 
 
 def add_tag(parent_element, tag, value):
+    """Створює теги зі значенням, використовується для уникнення дублювання"""
+
     new_tag = ET.SubElement(parent_element, tag)
     new_tag.text = value
 
 
 def add_dragbox(parent_tag, symbol, group):
+    """Додає dragbox блоки (перетягування) до тесту"""
+
     dragbox = ET.SubElement(parent_tag, "dragbox")
     dragbox_text = ET.SubElement(dragbox, "text")
     dragbox_text.text = symbol
@@ -25,8 +30,29 @@ def add_dragbox(parent_tag, symbol, group):
 
 
 def create_question_element(
-    test_name, jobs_amount_min, jobs_amount_max, jobs_duration_min, jobs_duration_max, i
+    test_name,
+    jobs_amount_min,
+    jobs_amount_max,
+    jobs_duration_min,
+    jobs_duration_max,
+    is_min_task,
+    is_delayed,
+    i,
 ):
+    """Генерує одне тестове питання в xml-форматі, на основі вхідних даних"""
+
+    jobs_amount, job_durations, ds = generate_problem_data(
+        jobs_amount_min,
+        jobs_amount_max,
+        jobs_duration_min,
+        jobs_duration_max,
+        is_min_task,
+        is_delayed,
+    )
+    res, crit_val, opt_count = solve(job_durations, ds, is_min_task, is_delayed)
+    options = "(" + "".join([str(i + 1) for i in range(jobs_amount)]) + ")"
+    group_b = "".join(map(str, range(jobs_amount + 1)))
+
     question = ET.Element("question", type="ddwtos")
 
     name = ET.SubElement(question, "name")
@@ -34,13 +60,6 @@ def create_question_element(
 
     questiontext = ET.SubElement(question, "questiontext", format="html")
     questiontext_text = ET.SubElement(questiontext, "text")
-
-    jobs_amount, job_durations, ds, is_min_task, is_delayed = generate_problem_data(
-        jobs_amount_min, jobs_amount_max, jobs_duration_min, jobs_duration_max
-    )
-    res, crit_val = solve(job_durations, ds, is_min_task, is_delayed)
-    options = "(" + "".join([str(i + 1) for i in range(jobs_amount)]) + ")"
-    group_b = "".join(map(str, range(jobs_amount + 1)))
 
     questiontext_text.text = f"""
         <![CDATA[
@@ -72,6 +91,7 @@ def create_question_element(
         <br>
         <p dir="ltr" style="text-align: left;">Оптимальний розклад: {' '.join([f'[[{options.index(i) + 1}]]' for i in res.replace(' ', '')])}</p>
         <p dir="ltr" style="text-align: left;">Опт. значення критерія: [[{len(options) + group_b.index(str(crit_val)) + 1}]]</p>
+        <p dir="ltr" style="text-align: left;">Кількість оптимальних розкладів: Work in Progress</p>
         ]]>
     """
 
@@ -99,7 +119,11 @@ def generate_quiz_xml(
     jobs_duration_max,
     tests_amount,
     test_name,
+    is_min_task,
+    is_delayed,
 ):
+    """Генерує xml з тестовими питаннями"""
+
     quiz = ET.Element("quiz")
 
     for i in range(1, tests_amount + 1):
@@ -109,6 +133,8 @@ def generate_quiz_xml(
             jobs_amount_max,
             jobs_duration_min,
             jobs_duration_max,
+            is_min_task,
+            is_delayed,
             i,
         )
         quiz.append(question)
@@ -132,5 +158,7 @@ if __name__ == "__main__":
         jobs_duration_max=10,
         tests_amount=1,
         test_name="GeneratedQuestion",
+        is_min_task=True,
+        is_delayed=True,
     )
     print(xml_output)

@@ -13,6 +13,7 @@ def handle_post_request():
     tests_amount = int(request.form.get("tests_amount"))
     test_name = str(request.form.get("test_name"))
     is_min_task = bool(int(request.form.get("is_min_task")))
+    is_delayed = bool(int(request.form.get("is_delayed")))
 
     xml_content = generate_quiz_xml(
         jobs_amount_min,
@@ -21,6 +22,8 @@ def handle_post_request():
         jobs_duration_max,
         tests_amount,
         test_name,
+        is_min_task,
+        is_delayed,
     )
 
     # Create a response with appropriate headers to force file download
@@ -35,9 +38,13 @@ def handle_post_request():
 
 @task1.route("/min_delayed", methods=["GET"])
 def min_delayed_page():
-    return render_template("task1.html", title="Min Delayed", is_min=True)
+    return render_template(
+        "task1.html", title="Min Delayed", is_min=True, is_delayed=True
+    )
 
 
 @task1.route("/max_delayed", methods=["GET"])
 def max_delayed_page():
-    return render_template("task1.html", title="Max Delayed", is_min=False)
+    return render_template(
+        "task1.html", title="Max Delayed", is_min=False, is_delayed=True
+    )
