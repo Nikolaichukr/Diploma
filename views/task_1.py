@@ -48,3 +48,17 @@ def max_delayed_page():
     return render_template(
         "task1.html", title="Max Delayed", is_min=False, is_delayed=True
     )
+
+
+@task1.route("/min_non_delayed", methods=["GET"])
+def min_non_delayed_page():
+    return render_template(
+        "task1.html", title="Min Non-Delayed", is_min=True, is_delayed=False
+    )
+
+
+@task1.route("/max_non_delayed", methods=["GET"])
+def max_non_delayed_page():
+    return render_template(
+        "task1.html", title="Max Non-Delayed", is_min=False, is_delayed=False
+    )

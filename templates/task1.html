@@ -7,13 +7,13 @@
 <div class="jumbotron d-flex align-items-center min-vh-100">
     <div class="container w-50 border border-3 border-secondary rounded-4 px-5">
         <h1 class="text-center">Категорія тестових питань</h1>
-        <h2 class="text-center">1 | d<sub>j</sub>=d | <span>&Sigma;</span>U<sub>j</sub>
+        <h2 class="text-center">1 | d<sub>j</sub>=d | <span>&Sigma;</span>{{ 'U' if is_delayed else 'U̅' }}<sub>j</sub>
             → {{ 'min' if is_min else 'max' }}</h2>
         <div class="container border border-2 border-secondary rounded-2 my-4 py-2">
             <h5>Дано:</h5>
             <span>1 машина, n робіт.<br>
                 p<sub>j</sub> - тривалості робіт, j=1,...,n. d - спільний директивний строк.<br>
-                Скласти розклад, за якого досягає {{ 'мінімуму' if is_min else 'максимуму' }} кількість робіт, що запізнюються.
+                Скласти розклад, за якого досягає {{ 'мінімуму' if is_min else 'максимуму' }} кількість робіт, що {{ '' if is_delayed else 'не ' }}запізнюється.
             </span>
         </div>
         <form method="post" action="{{ url_for('task1.handle_post_request') }}">

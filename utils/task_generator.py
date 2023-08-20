@@ -84,7 +84,7 @@ def is_min_max_a_not_a(
     if is_min_task:
         return min(non_delayed_part) < max(delayed_part)
     else:
-        return max(non_delayed_part) > min(delayed_part)
+        return min(non_delayed_part) > max(delayed_part)
 
 
 def is_valid_data(
@@ -112,6 +112,12 @@ def is_valid_data(
                 is_min_max_a_not_a(non_delayed_part, delayed_part, is_min_task),
             ]
         )
+
+    if not is_delayed and is_min_task:
+        return True
+
+    if not is_delayed and not is_min_task:
+        return True
 
     return False
 
