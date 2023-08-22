@@ -77,14 +77,17 @@ def get_parts(job_durations: List[int], ds: int, is_min_task: bool, is_delayed: 
 
 
 def is_min_max_a_not_a(
-    non_delayed_part: List[int], delayed_part: List[int], is_min_task: bool
+    non_delayed_part: List[int],
+    delayed_part: List[int],
+    is_min_task: bool,
+    is_delayed: bool,
 ):
     """Перевірка умови min(pj) < max(pj), де min(pj) працює з множиною робіт, що не запізнюються, а max(pj) з множиною робіт, що запізнюються"""
 
-    if is_min_task:
-        return min(non_delayed_part) < max(delayed_part)
-    else:
+    if is_min_task ^ is_delayed:
         return min(non_delayed_part) > max(delayed_part)
+    else:
+        return min(non_delayed_part) < max(delayed_part)
 
 
 def is_valid_data(
@@ -96,28 +99,26 @@ def is_valid_data(
         job_durations, ds, is_min_task, is_delayed
     )
 
-    if is_delayed and is_min_task:
+    if (is_delayed and is_min_task) or (not is_delayed and not is_min_task):
         return all(
             [
                 min(job_durations) < ds < sum(job_durations),
-                is_min_max_a_not_a(non_delayed_part, delayed_part, is_min_task),
+                is_min_max_a_not_a(
+                    non_delayed_part, delayed_part, is_min_task, is_delayed
+                ),
             ]
         )
 
-    if is_delayed and not is_min_task:
+    if (is_delayed and not is_min_task) or (not is_delayed and is_min_task):
         return all(
             [
                 max(job_durations) < ds < sum(job_durations),
                 ds - sum(non_delayed_part) < min(delayed_part),
-                is_min_max_a_not_a(non_delayed_part, delayed_part, is_min_task),
+                is_min_max_a_not_a(
+                    non_delayed_part, delayed_part, is_min_task, is_delayed
+                ),
             ]
         )
-
-    if not is_delayed and is_min_task:
-        return True
-
-    if not is_delayed and not is_min_task:
-        return True
 
     return False
 
@@ -128,6 +129,7 @@ def generate_raw_data(
     jobs_duration_min: int,
     jobs_duration_max: int,
     is_min_task: bool,
+    is_delayed: bool,
 ):
     """Ця функція генерує дані для задачі - тривалості робіт та директивний строк, проте вони потребують додаткових перевірок"""
 
@@ -137,10 +139,10 @@ def generate_raw_data(
     )
     ds = generate_ds(
         *calculate_mu_sigma(
-            (max(job_durations), min(job_durations))[is_min_task] + 1,
+            (min(job_durations), max(job_durations))[is_min_task ^ is_delayed] + 1,
             sum(job_durations) - 1,
         ),
-        (max(job_durations), min(job_durations))[is_min_task],
+        (min(job_durations), max(job_durations))[is_min_task ^ is_delayed],
         sum(job_durations),
     )
 
@@ -163,6 +165,7 @@ def generate_problem_data(
         jobs_duration_min,
         jobs_duration_max,
         is_min_task,
+        is_delayed,
     )
 
     while not is_valid_data(job_durations, ds, is_min_task, is_delayed):
@@ -172,6 +175,7 @@ def generate_problem_data(
             jobs_duration_min,
             jobs_duration_max,
             is_min_task,
+            is_delayed,
         )
 
     return jobs_amount, job_durations, ds
@@ -182,7 +186,7 @@ if __name__ == "__main__":
     print(
         f"+{'-' * 120}+\n|{'Тривалості робіт':^20}|{'Дир. строк':^12}|{'Досягає':^12}|{'Запізнюється':^14}|{'Оптимальний розклад':^22}|{'Опт.знач.крит.':^17}|{'К-ть.опт.розкл.':^17}|\n+{'-' * 120}+"
     )
-    for _ in range(10):
+    for _ in range(100000):
         _jobs_amount, _job_durations, _ds = generate_problem_data(
             jobs_amount_min=5,
             jobs_amount_max=7,
