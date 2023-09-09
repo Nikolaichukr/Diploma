@@ -1,2 +1,2 @@
-from .main import main
-from .task_1 import task1
+from .menu_views import menu
+from .delayed_tasks_view import delayed_tasks

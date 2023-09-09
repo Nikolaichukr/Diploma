@@ -1,10 +1,10 @@
 from flask import Blueprint, render_template, request, make_response
 from utils.generate_xml import generate_quiz_xml
 
-task1 = Blueprint("task1", __name__)
+delayed_tasks = Blueprint("delayed_tasks", __name__)
 
 
-@task1.route("/handle_post", methods=["POST"])
+@delayed_tasks.route("/handle_post", methods=["POST"])
 def handle_post_request():
     jobs_amount_min = int(request.form.get("jobs_amount_min"))
     jobs_amount_max = int(request.form.get("jobs_amount_max"))
@@ -36,29 +36,34 @@ def handle_post_request():
     return response
 
 
-@task1.route("/min_delayed", methods=["GET"])
+@delayed_tasks.route("/min_delayed", methods=["GET"])
 def min_delayed_page():
     return render_template(
-        "task1.html", title="Min Delayed", is_min=True, is_delayed=True
+        "delayed_task.html", title="Min Delayed", is_min=True, is_delayed=True
     )
 
 
-@task1.route("/max_delayed", methods=["GET"])
+@delayed_tasks.route("/max_delayed", methods=["GET"])
 def max_delayed_page():
     return render_template(
-        "task1.html", title="Max Delayed", is_min=False, is_delayed=True
+        "delayed_task.html", title="Max Delayed", is_min=False, is_delayed=True
     )
 
 
-@task1.route("/min_non_delayed", methods=["GET"])
+@delayed_tasks.route("/min_non_delayed", methods=["GET"])
 def min_non_delayed_page():
     return render_template(
-        "task1.html", title="Min Non-Delayed", is_min=True, is_delayed=False
+        "delayed_task.html", title="Min Non-Delayed", is_min=True, is_delayed=False
     )
 
 
-@task1.route("/max_non_delayed", methods=["GET"])
+@delayed_tasks.route("/max_non_delayed", methods=["GET"])
 def max_non_delayed_page():
     return render_template(
-        "task1.html", title="Max Non-Delayed", is_min=False, is_delayed=False
+        "delayed_task.html", title="Max Non-Delayed", is_min=False, is_delayed=False
     )
+
+
+@delayed_tasks.route("/complicated_task", methods=["GET"])
+def complicated_task():
+    return "To be implemented"

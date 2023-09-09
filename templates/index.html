@@ -2,41 +2,27 @@
 
 <div class="jumbotron d-flex align-items-center min-vh-100">
     <div class="container w-50 border border-3 border-secondary rounded-4 px-5">
-        <h1 class="text-center my-5">Створювач тестових питань</h1>
+        <h1 class="text-center my-5">Головне меню створювача тестових питань</h1>
         <div class="row justify-content-center">
-            <div class="col-md-5 mb-3 text-center">
-                <a href="{{ url_for('task1.min_delayed_page') }}" class="btn btn-primary btn-block btn-lg w-100">1 |
-                    d<sub>j</sub>=d |
-                    <span>&Sigma;</span>U<sub>j</sub>
-                    → min </a>
-            </div>
-            <div class="col-md-5 mb-3 text-center">
-                <a href="{{ url_for('task1.max_delayed_page') }}" class="btn btn-primary btn-block btn-lg w-100">1 |
-                    d<sub>j</sub>=d |
-                    <span>&Sigma;</span>U<sub>j</sub>
-                    → max </a>
+            <div class="col-md-10 mb-3 text-center">
+                <a href="{{ url_for('menu.delayed_tasks_menu') }}" class="btn btn-primary btn-block btn-lg w-100">Задачі,
+                    що запізнюються</a>
             </div>
         </div>
         <div class="row justify-content-center">
             <div class="col-md-5 mb-3 text-center">
-                <a href="{{ url_for('task1.min_non_delayed_page') }}" class="btn btn-primary btn-block btn-lg w-100">1 |
-                    d<sub>j</sub>=d |
-                    <span>&Sigma;</span>U̅<sub>j</sub>
-                    → min </a>
+                <a href="{{ url_for('menu.spt_menu') }}" class="btn btn-primary btn-block btn-lg w-100">SPT</a>
             </div>
             <div class="col-md-5 mb-3 text-center">
-                <a href="{{ url_for('task1.max_non_delayed_page') }}" class="btn btn-primary btn-block btn-lg w-100">1 |
-                    d<sub>j</sub>=d |
-                    <span>&Sigma;</span>U̅<sub>j</sub>
-                    → max </a>
+                <a href="{{ url_for('menu.lpt_menu') }}" class="btn btn-primary btn-block btn-lg w-100">LPT</a>
             </div>
         </div>
         <div class="row justify-content-center">
             <div class="col-md-5 mb-3 text-center">
-                <a href="" class="btn btn-primary btn-block btn-lg w-100">Кнопка 5</a>
+                <a href="{{ url_for('menu.sptu_menu') }}" class="btn btn-primary btn-block btn-lg w-100">SPT<sub>u</sub></a>
             </div>
             <div class="col-md-5 mb-3 text-center">
-                <a href="" class="btn btn-primary btn-block btn-lg w-100">Кнопка 6</a>
+                <a href="{{ url_for('menu.lptu_menu') }}" class="btn btn-primary btn-block btn-lg w-100">LPT<sub>u</sub></a>
             </div>
         </div>
     </div>

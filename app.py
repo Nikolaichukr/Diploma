@@ -3,8 +3,8 @@ from views import *
 
 app = Flask(__name__)
 
-app.register_blueprint(main, url_prefix="/")
-app.register_blueprint(task1, url_prefix="/task1")
+app.register_blueprint(menu, url_prefix="/")
+app.register_blueprint(delayed_tasks, url_prefix="/delayed_task")
 
 
 @app.errorhandler(500)
