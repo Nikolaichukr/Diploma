@@ -4,7 +4,8 @@
 
 <div class="jumbotron d-flex align-items-center min-vh-100">
     <div class="container w-50 border border-3 border-secondary rounded-4 px-5">
-        <h1 class="text-center my-5">Категорія задач, що запізнюються</h1>
+        <h1 class="text-center my-5">Критерії, які враховують кількість робіт, що запізнюються
+            <br>(не запізнюються)</h1>
         <div class="row justify-content-center">
             <div class="col-md-5 mb-3 text-center">
                 <a href="{{ url_for('delayed_tasks.min_delayed_page') }}"
@@ -40,7 +41,10 @@
         <div class="row justify-content-center">
             <div class="col-md-10 mb-3 text-center">
                 <a href="{{ url_for('delayed_tasks.complicated_task') }}"
-                   class="btn btn-primary btn-block btn-lg w-100">Ускладнена задача</a>
+                   class="btn btn-primary btn-block btn-lg w-100">1 |
+                    d<sub>j</sub>=d |
+                    <span>&Sigma;</span>U<sub>j</sub>
+                    → max (ускладнена задача)</a>
             </div>
         </div>
     </div>
