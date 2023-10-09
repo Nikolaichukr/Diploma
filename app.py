@@ -5,6 +5,7 @@ app = Flask(__name__)
 
 app.register_blueprint(menu, url_prefix="/")
 app.register_blueprint(delayed_tasks, url_prefix="/delayed_task")
+app.register_blueprint(spt_tasks, url_prefix="/spt_task")
 
 
 @app.errorhandler(500)

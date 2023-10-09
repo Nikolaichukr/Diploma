@@ -2,8 +2,8 @@
 # Мінімуму  (MIN = True)    +   НЕ ЗАПІЗНЮЄТЬСЯ (DELAYED = False)  ->  Спочатку йдуть довші   (сортування за спаданням)   (reverse = True)
 # Максимуму (MIN = False)   +   ЗАПІЗНЮЄТЬСЯ    (DELAYED = True)   ->  Спочатку йдуть довші   (сортування за спаданням)   (reverse = True)
 # Мінімуму  (MIN = True)    +   ЗАПІЗНЮЄТЬСЯ    (DELAYED = True)   ->  Спочатку йдуть коротші (сортування за зростанням)  (reverse = False)
-from typing import List
 from math import factorial
+from typing import List
 
 MIN = False  # Досягає максимуму - False, мінімуму - True
 DELAYED = False  # Запізнюється - True, НЕ запізнюється - FALSE

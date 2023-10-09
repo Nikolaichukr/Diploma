@@ -12,8 +12,10 @@
 
 import random
 from typing import List, Union
+
 import numpy as np
-from utils.solver import solve
+
+from utils.delayed_tasks.solver import solve
 
 
 def generate_durations(

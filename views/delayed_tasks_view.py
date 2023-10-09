@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, make_response
-from utils.generate_xml import generate_quiz_xml
+from utils.delayed_tasks.generate_xml import generate_quiz_xml
 
 delayed_tasks = Blueprint("delayed_tasks", __name__)
 

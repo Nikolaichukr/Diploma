@@ -1,33 +1,8 @@
 import xml.etree.ElementTree as ET
-from html import unescape
-from lxml import etree
-from utils.solver import solve
-from utils.task_generator import generate_problem_data
 from math import factorial
-
-
-def tab():
-    """Повертає комбінацію перенесення каретки та табуляції, потрібна виключно для візуального відображення"""
-
-    return "\n\t\t\t"
-
-
-def add_tag(parent_element, tag, value):
-    """Створює теги зі значенням, використовується для уникнення дублювання"""
-
-    new_tag = ET.SubElement(parent_element, tag)
-    new_tag.text = value
-
-
-def add_dragbox(parent_tag, symbol, group):
-    """Додає dragbox блоки (перетягування) до тесту"""
-
-    dragbox = ET.SubElement(parent_tag, "dragbox")
-    dragbox_text = ET.SubElement(dragbox, "text")
-    dragbox_text.text = str(symbol)
-    dragbox_group = ET.SubElement(dragbox, "group")
-    dragbox_group.text = str(group)
-    ET.SubElement(dragbox, "infinite")
+from utils.delayed_tasks.solver import solve
+from utils.delayed_tasks.task_generator import generate_problem_data
+from utils.general_purpose import tab, add_tag, add_dragbox, prettify
 
 
 def create_question_element(
@@ -153,15 +128,7 @@ def generate_quiz_xml(
         )
         quiz.append(question)
 
-    xml_string = ET.tostring(quiz, encoding="UTF-8").decode("utf-8")
-
-    parser = etree.XMLParser(remove_blank_text=True)
-    tree = etree.fromstring(xml_string, parser)
-    return unescape(
-        etree.tostring(
-            tree, encoding="utf-8", pretty_print=True, xml_declaration=True
-        ).decode("utf-8")
-    )
+    return prettify(quiz)
 
 
 if __name__ == "__main__":

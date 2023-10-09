@@ -1,7 +1,9 @@
-import xml.etree.ElementTree as ET
 import html
+import xml.etree.ElementTree as ET
+
 from bs4 import BeautifulSoup
-from solver import solve, normalize_schedule_string
+
+from utils.delayed_tasks.solver import solve, normalize_schedule_string
 
 
 def extract_quiz_tags(xml_file):
@@ -28,8 +30,8 @@ def extract_data_from_quiz(quiz):
         raw_data_list = list(map(lambda td: td.text, tds))
         ds = int(raw_data_list[-1].strip())
         job_durations = list(map(int, raw_data_list[-11:-6]))
-        opt_schedule = text[text.index(":=") + 2:text.rindex("~%")].strip()
-        opt_crit_value = int(text[text.rindex(":=") + 2:text.rindex("}")].strip())
+        opt_schedule = text[text.index(":=") + 2 : text.rindex("~%")].strip()
+        opt_crit_value = int(text[text.rindex(":=") + 2 : text.rindex("}")].strip())
         is_min_task = "мінімуму" in text
         return job_durations, ds, opt_schedule, opt_crit_value, is_min_task
     else:
@@ -67,7 +69,7 @@ def display_problem_info(
 
 
 if __name__ == "__main__":
-    xml_file_path = "../data/60_questions.xml"
+    xml_file_path = "../../data/60_questions.xml"
     _quiz_tags = extract_quiz_tags(xml_file_path)
     if _quiz_tags:
         quiz_amount, ok_quizzes = len(_quiz_tags), 0

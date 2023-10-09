@@ -1,23 +1,22 @@
 {% include 'partials/header.html' %}
 
 <div class="position-fixed" style="top: 25px; left: 25px;">
-    <a href="{{ url_for('menu.delayed_tasks_menu') }}" class="btn btn-primary"> <span aria-hidden="true">&larr;</span>
+    <a href="{{ url_for('menu.spt_menu') }}" class="btn btn-primary"> <span aria-hidden="true">&larr;</span>
         Назад до меню</a>
 </div>
 
 <div class="jumbotron d-flex align-items-center min-vh-100">
     <div class="container w-50 border border-3 border-secondary rounded-4 px-5">
         <h1 class="text-center">Категорія тестових питань</h1>
-        <h2 class="text-center">1 | d<sub>j</sub>=d | <span>&Sigma;</span>{{ 'U' if is_delayed else 'U̅' }}<sub>j</sub>
-            → {{ 'min' if is_min else 'max' }}</h2>
+        <h2 class="text-center">1 || <span>&Sigma;</span>F<sub>j</sub> → min</h2>
         <div class="container border border-2 border-secondary rounded-2 my-4 py-2">
             <h5>Дано:</h5>
             <span>1 машина, n робіт.<br>
-                p<sub>j</sub> - тривалості робіт, j=1,...,n. d - спільний директивний строк.<br>
-                Скласти розклад, за якого досягає {{ 'мінімуму' if is_min else 'максимуму' }} кількість робіт, що {{ '' if is_delayed else 'не ' }}запізнюється.
+                t<sub>i</sub> - тривалості робіт.<br>
+                Скласти розклад, з мінімальною сумарною тривалістю проходження.
             </span>
         </div>
-        <form method="post" action="{{ url_for('delayed_tasks.handle_post_request') }}">
+        <form method="post" action="{{ url_for('spt_tasks.handle_post_request') }}">
             <div class="container border border-2 border-secondary rounded-2 my-4 py-2">
                 <h5>Параметри робіт</h5>
                 <div class="row mb-3">
@@ -63,8 +62,6 @@
                     </div>
                 </div>
             </div>
-            <input type="hidden" name="is_min_task" value="{{ '1' if is_min else '0' }}">
-            <input type="hidden" name="is_delayed" value="{{ '1' if is_delayed else '0' }}">
             <div class="row justify-content-center mb-3 mx-2">
                 <button type="submit" class="btn btn-primary">Згенерувати тестові питання</button>
             </div>
