@@ -66,16 +66,11 @@ def generate_job_weights(
     return [random.randint(weight_min, weight_max) for _ in range(jobs_amount)]
 
 
-def format_list_to_string(jobs_list):
+def format_job_tuple_to_string(job):
     """Конвертує список кортежів до списку рядків формату '№i / ti / ui / di'"""
-
-    formatted = []
-
-    for job in jobs_list:
-        job_string = f"№{job[0]} / {job[1]} / {job[2]} / {job[3]}"
-        formatted.append(job_string)
-
-    return formatted
+    if isinstance(job, tuple):
+        return f"№{job[0]} / {job[1]} / {job[2]} / {job[3]}"
+    return job
 
 
 def generate_problem_data(
@@ -108,4 +103,6 @@ def generate_problem_data(
 if __name__ == "__main__":
     for _ in range(5):
         lst = generate_problem_data(5, 7, 5, 25)
-        print(format_list_to_string(lst))
+        for j in lst:
+            print(format_job_tuple_to_string(j))
+        print()

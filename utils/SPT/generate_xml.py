@@ -1,11 +1,15 @@
 import xml.etree.ElementTree as ET
 from utils.general_purpose import add_tag, add_dragbox, prettify
-from utils.SPT.task_generator import generate_problem_data
+from utils.SPT.task_generator import generate_problem_data, format_job_tuple_to_string
+from utils.SPT.solver import solve_SPT
 
 
-def create_question_element(test_name, i, jobs_amount):
+def create_question_element(
+    test_name, i, jobs_amount_min, jobs_amount_max, jobs_duration_min, jobs_duration_max
+):
     """Генерує одне тестове питання в xml-форматі, на основі вхідних даних"""
 
+    # Початок генерації XML-файлу
     question = ET.Element("question", type="ddwtos")
 
     name = ET.SubElement(question, "name")
@@ -14,16 +18,33 @@ def create_question_element(test_name, i, jobs_amount):
     questiontext = ET.SubElement(question, "questiontext", format="html")
     questiontext_text = ET.SubElement(questiontext, "text")
 
-    schedule_items = generate_problem_data()
+    # Генерація даних для наповнення тесту
+    schedule_items = generate_problem_data(
+        jobs_amount_min, jobs_amount_max, jobs_duration_min, jobs_duration_max
+    )
 
+    formatted_blocks = [format_job_tuple_to_string(item) for item in schedule_items]
+    additional_blocks = ["(", ")", "-"]
+    option_blocks = formatted_blocks + additional_blocks
+
+    sorted_solved_jobs, alt_opts = solve_SPT(schedule_items)
+    sorted_solved_jobs += ["-"] * (10 - len(sorted_solved_jobs))
+
+    alternate_optimums = list(range(25))
+
+    crit_values = [1, 2, 3, 4, 5, 6]
+
+    # Продовження генерації XML-файлу
     questiontext_text.text = f"""
         <![CDATA[
-        <p dir="ltr"">Для системи з \( n={jobs_amount}, m=1 \) скласти розклад <strong>мінімальною сумарною тривалістю проходження</strong></p>
+        <p dir="ltr"">Для системи з \( n={len(schedule_items)}, m=1 \) скласти розклад <strong>мінімальною сумарною тривалістю проходження</strong></p>
         <p></p>
-        Результуючий розклад: [[1]] [[4]] [[5]] [[2]] [[3]] [[7]] [[6]] 
+        Результуючий розклад: {' '.join([f"[[{option_blocks.index(format_job_tuple_to_string(item)) + 1}]]" for item in sorted_solved_jobs])}
         <br>
         <p></p>
-        Кількість альтернативних оптимумів: [[8]]
+        Кількість альтернативних оптимумів: [[{len(option_blocks) + 1 + alternate_optimums.index(alt_opts)}]]
+        <br>
+        Значення критерію: [[{1 + len(option_blocks) + len(alternate_optimums) + crit_values.index(2)}]]
         <br>
         <em>Перетягнути наступні елементи на відповідні їм місця.</em>
         <br>
@@ -43,30 +64,44 @@ def create_question_element(test_name, i, jobs_amount):
     add_tag(question, "shuffleanswers", "0")
     add_tag(question, "shownumcorrect", "")
 
-    for symbol in schedule_items:
+    for symbol in option_blocks:
         add_dragbox(parent_tag=question, symbol=symbol, group=1)
 
-    for option in ["(", ")", "-"]:
-        add_dragbox(parent_tag=question, symbol=option, group=1)
-
-    for option in [8, 10, 19, 18, 21, 2]:
+    for option in alternate_optimums:
         add_dragbox(parent_tag=question, symbol=option, group=2)
+
+    for option in crit_values:
+        add_dragbox(parent_tag=question, symbol=option, group=3)
 
     return question
 
 
-def generate_quiz_xml(tests_amount, test_name, jobs_amount):
+def generate_quiz_xml(
+    jobs_amount_min,
+    jobs_amount_max,
+    jobs_duration_min,
+    jobs_duration_max,
+    tests_amount,
+    test_name,
+):
     """Генерує xml з тестовими питаннями"""
 
     quiz = ET.Element("quiz")
 
     for i in range(1, tests_amount + 1):
-        question = create_question_element(test_name, i, jobs_amount)
+        question = create_question_element(
+            test_name,
+            i,
+            jobs_amount_min,
+            jobs_amount_max,
+            jobs_duration_min,
+            jobs_duration_max,
+        )
         quiz.append(question)
 
     return prettify(quiz)
 
 
 if __name__ == "__main__":
-    xml_output = generate_quiz_xml(tests_amount=1, test_name="SPT_F", jobs_amount=5)
+    xml_output = generate_quiz_xml(5, 7, 5, 25, 1, "SPT_F")
     print(xml_output)

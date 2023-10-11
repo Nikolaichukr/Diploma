@@ -13,7 +13,14 @@ def handle_post_request():
     tests_amount = int(request.form.get("tests_amount"))
     test_name = str(request.form.get("test_name"))
 
-    xml_content = generate_quiz_xml(tests_amount=1, test_name="SPT_F", jobs_amount=5)
+    xml_content = generate_quiz_xml(
+        jobs_amount_min,
+        jobs_amount_max,
+        jobs_duration_min,
+        jobs_duration_max,
+        tests_amount,
+        test_name,
+    )
 
     # Create a response with appropriate headers to force file download
     response = make_response(xml_content)
