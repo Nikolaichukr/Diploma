@@ -1,32 +1,44 @@
 from utils.SPT.task_generator import generate_problem_data, format_job_tuple_to_string
 from collections import Counter
-from math import factorial
+from math import factorial, prod
 
 
 def identify_alternative_optimums(problem_list):
     """
     Функція, для додавання дужок, що свідчать про наявність альтернативних оптимумів
 
-    Повертає розклад та кількість альтернативних оптимумів
+    Повертає розклад (з дужками) та кількість альтернативних оптимумів
     """
 
-    durations = [item[1] for item in problem_list]  # Витягаємо тривалості
+    # Додаємо дужки
+    result_list = []  # Ініціалізація фінального списку робіт з дужками
+    i = 0  # Вказівник для перевірки списку робіт
 
-    # Витягаємо неунікальне значення, та кількість разів, які воно зустрічається
-    value, times = Counter(durations).most_common()[0]
+    while i < len(problem_list):  # Ітеруємось списком робіт
+        # Створюємо тимчасову групу робіт, починаючи з поточної
+        temp = [problem_list[i]]
+        while (  # Дивимось на наступну роботу, якщо в неї така ж тривалість - додаємо до групи
+            i + 1 < len(problem_list) and problem_list[i][1] == problem_list[i + 1][1]
+        ):
+            temp.append(problem_list[i + 1])
+            i += 1
+        # Якщо в тимчасовій групі більше одного елемента - додаємо ці елементи до результату з дужками
+        if len(temp) > 1:
+            result_list.extend(["(", *temp, ")"])
+        else:  # Інакше, додаємо лише саму роботу, без дужок
+            result_list.append(temp[0])
+        i += 1
 
-    start, end = None, None
-    for i in range(len(problem_list)):
-        if problem_list[i][1] == value:
-            if start is None:
-                start = i
-            end = i
+    # Обраховуємо кількість альтернативних оптимумів
 
-    if start is not None:
-        problem_list.insert(start, "(")
-        problem_list.insert(end + times, ")")
+    # Витягаємо значення тривалостей
+    durations = [item[1] for item in problem_list]
+    counts = Counter(durations)  # Рахуємо скільки разів зустрічаються тривалості
+    multi_occurrences = [num for dur, num in counts.items() if num > 1]
 
-    return problem_list, factorial(times)
+    alt_opt_count = prod([factorial(num) for num in multi_occurrences])
+
+    return result_list, alt_opt_count
 
 
 def clean(lst):
@@ -97,4 +109,5 @@ if __name__ == "__main__":
     solved, alt_opts = solve_SPT(gen_lst)
     for k in solved:
         print(format_job_tuple_to_string(k))
-    print(get_Li(solved))
+
+    print(alt_opts)

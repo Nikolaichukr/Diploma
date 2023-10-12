@@ -32,7 +32,7 @@ def create_question_element(
     Fi_value = sum(get_TiFi(sorted_solved_jobs))
 
     sorted_solved_jobs += ["-"] * (10 - len(sorted_solved_jobs))
-    alternate_optimums = list(range(25))
+    alternate_optimums = list(range(1, 37))
     crit_values = [int(Fi_value * uniform(0.5, 1.5)) for _ in range(20)]
     if Fi_value not in crit_values:
         crit_values.append(Fi_value)
@@ -55,7 +55,8 @@ def create_question_element(
         Позначення \( №i / t _i / d _i/ u _i\<br>\), де \( i \) - номер роботи, \( t_i \) - її тривалість,
         \( d_i \) - її директивний строк, \( u_i \) - її вага.
         <br>
-        <em>У випадку альтернативних оптимумів використовувати дужки "(" та ")". В дужках номери робіт упорядковувати за зростанням.</em><br>]]>
+        <em>У випадку альтернативних оптимумів використовувати дужки "(" та ")". В дужках номери робіт упорядковувати за зростанням.</em><br>
+        <em>Зайві поля заповнити блоком з символом "-".</em><br>]]>
     """
 
     # Adding the 'generalfeedback' element

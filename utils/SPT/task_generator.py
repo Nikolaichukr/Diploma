@@ -18,28 +18,47 @@ def generate_job_durations(
     # sigma (std.dev) була обрана таким чином (max-min)/4, що ~95% значень знаходяться в межах [min, max]
     sigma = (jobs_duration_max - jobs_duration_min) / 4
 
-    # Генеруємо N-1 тривалостей
+    # Визначаємо скільки наборів повторів буде, тобто один з варіантів:
+    # 1 2 3 4 5 6       - в 10% випадків
+    # 1 (2 3) 4 5 6     - в 60% випадків
+    # 1 (2 3) (4 5) 6   - в 30% випадків
+
+    duplicates_sets = np.random.choice([0, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2])
+
+    # Визначаємо скільки дублікатів буде в самих дужках, один з двох сценаріїв:
+    # 1) (7, 7)
+    # 2) (9, 9, 9)
+
+    if jobs_amount > 5:
+        duplicate_amounts = [np.random.choice([1, 2]) for _ in range(duplicates_sets)]
+    else:
+        duplicate_amounts = [1 for _ in range(duplicates_sets)]
+
+    # Ініціалізуємо масив тривалостей та допоміжну множину
     durations_set = set()
     durations = np.empty(0, dtype=int)
 
-    while len(durations) < (jobs_amount - 1):
+    # Генеруємо початковий набір унікальних тривалостей (без дублікатів)
+    while len(durations) < (jobs_amount - sum(duplicate_amounts)):
         new_durations = np.round(
             np.random.normal(mu, sigma, jobs_amount - len(durations))
         )
         for duration in new_durations:
+            duration = int(duration)
             if (
                 jobs_duration_min <= duration <= jobs_duration_max
                 and duration not in durations_set
             ):
-                durations = np.append(durations, int(duration))
+                durations = np.append(durations, duration)
                 durations_set.add(duration)
-            if len(durations) == (jobs_amount - 1):
+            if len(durations) == (jobs_amount - sum(duplicate_amounts)):
                 break
 
-    # Додаємо дублікат
-    if len(durations) > 0:
-        duplicate_item_index = np.random.randint(0, len(durations))
-        durations = np.append(durations, durations[duplicate_item_index])
+    # Додаємо дублікати до списку тривалостей
+    duplicate_values = random.sample(list(durations), duplicates_sets)
+    for dup_duration, dup_times in zip(duplicate_values, duplicate_amounts):
+        for _ in range(dup_times):
+            durations = np.append(durations, dup_duration)
 
     return list(durations)
 
