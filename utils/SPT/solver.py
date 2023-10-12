@@ -29,6 +29,53 @@ def identify_alternative_optimums(problem_list):
     return problem_list, factorial(times)
 
 
+def clean(lst):
+    """Функція видаляє дужки, що відповідають за альтернативні оптимуми зі списку"""
+
+    return [item for item in lst if isinstance(item, tuple)]
+
+
+def get_Wi(lst):
+    """
+    Приймає на вхід уже відсортований список кортежів
+    та обраховує для них список тривалостей очікування (Wi)
+    """
+
+    clean_lst = clean(lst)
+
+    return [
+        sum([int(item[1]) for item in clean_lst[:i]]) for i in range(len(clean_lst))
+    ]
+
+
+def get_TiFi(lst):
+    """
+    Приймає на вхід уже відсортований список кортежів
+    і обраховує для них список моментів закінчення (Ti)
+    та список тривалостей проходження (Fi),
+    при чому вважається що усі роботи надходять одночасно.
+    """
+
+    clean_lst = clean(lst)
+
+    return [
+        sum([int(item[1]) for item in clean_lst[: i + 1]])
+        for i in range(len(clean_lst))
+    ]
+
+
+def get_Li(lst):
+    """
+    Приймає на вхід уже відсортований список кортежів
+    та обраховує для них список часових зміщень (Li)
+    """
+
+    clean_lst = clean(lst)
+    Ti = get_TiFi(clean_lst)
+
+    return list(map(lambda x: x[0] - x[1], zip(Ti, [item[2] for item in clean_lst])))
+
+
 def solve_SPT(problem_list):
     """
     Сортує роботи за неспаданням тривалостей (SPT), а якщо тривалості однакові,
@@ -40,13 +87,14 @@ def solve_SPT(problem_list):
 
 
 if __name__ == "__main__":
-    lst = generate_problem_data(5, 7, 5, 25)
+    gen_lst = generate_problem_data(5, 7, 5, 25)
 
     print("Generated data:")
-    for k in lst:
+    for k in gen_lst:
         print(format_job_tuple_to_string(k))
 
     print("\nSolved data:")
-    solved, alt_opts = solve_SPT(lst)
+    solved, alt_opts = solve_SPT(gen_lst)
     for k in solved:
         print(format_job_tuple_to_string(k))
+    print(get_Li(solved))

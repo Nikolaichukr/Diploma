@@ -1,7 +1,8 @@
 import xml.etree.ElementTree as ET
 from utils.general_purpose import add_tag, add_dragbox, prettify
 from utils.SPT.task_generator import generate_problem_data, format_job_tuple_to_string
-from utils.SPT.solver import solve_SPT
+from utils.SPT.solver import solve_SPT, get_TiFi
+from random import uniform, shuffle
 
 
 def create_question_element(
@@ -28,11 +29,14 @@ def create_question_element(
     option_blocks = formatted_blocks + additional_blocks
 
     sorted_solved_jobs, alt_opts = solve_SPT(schedule_items)
+    Fi_value = sum(get_TiFi(sorted_solved_jobs))
+
     sorted_solved_jobs += ["-"] * (10 - len(sorted_solved_jobs))
-
     alternate_optimums = list(range(25))
-
-    crit_values = [1, 2, 3, 4, 5, 6]
+    crit_values = [int(Fi_value * uniform(0.5, 1.5)) for _ in range(20)]
+    if Fi_value not in crit_values:
+        crit_values.append(Fi_value)
+    shuffle(crit_values)
 
     # Продовження генерації XML-файлу
     questiontext_text.text = f"""
@@ -44,7 +48,7 @@ def create_question_element(
         <p></p>
         Кількість альтернативних оптимумів: [[{len(option_blocks) + 1 + alternate_optimums.index(alt_opts)}]]
         <br>
-        Значення критерію: [[{1 + len(option_blocks) + len(alternate_optimums) + crit_values.index(2)}]]
+        Значення критерію: [[{1 + len(option_blocks) + len(alternate_optimums) + crit_values.index(Fi_value)}]]
         <br>
         <em>Перетягнути наступні елементи на відповідні їм місця.</em>
         <br>
