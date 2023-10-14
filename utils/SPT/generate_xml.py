@@ -1,12 +1,20 @@
+"""Цей файл генерує XML-код, що описує набір задач"""
+
 import xml.etree.ElementTree as ET
-from utils.general_purpose import add_tag, add_dragbox, prettify
+from utils.xml_utils import add_tag, add_dragbox, prettify
 from utils.SPT.task_generator import generate_problem_data, format_job_tuple_to_string
-from utils.SPT.solver import solve_SPT, get_TiFi
+from utils.SPT.solver import solve_SPT, get_TiFi, get_Li, get_Wi
 from random import uniform, shuffle
 
 
 def create_question_element(
-    test_name, i, jobs_amount_min, jobs_amount_max, jobs_duration_min, jobs_duration_max
+    test_name,
+    i,
+    jobs_amount_min,
+    jobs_amount_max,
+    jobs_duration_min,
+    jobs_duration_max,
+    task_type,
 ):
     """Генерує одне тестове питання в xml-форматі, на основі вхідних даних"""
 
@@ -29,26 +37,43 @@ def create_question_element(
     option_blocks = formatted_blocks + additional_blocks
 
     sorted_solved_jobs, alt_opts = solve_SPT(schedule_items)
-    Fi_value = sum(get_TiFi(sorted_solved_jobs))
+    seeking_criteria, text_description = None, None
+
+    if task_type == "F":
+        seeking_criteria = sum(get_TiFi(sorted_solved_jobs))
+        text_description = "мінімальною сумарною тривалістю проходження"
+    elif task_type == "L":
+        seeking_criteria = sum(get_Li(sorted_solved_jobs))
+        text_description = "мінімальним сумарним часовим зміщенням"
+    elif task_type == "T":
+        seeking_criteria = sum(get_TiFi(sorted_solved_jobs))
+        text_description = "мінімальним сумарним часом закінчення"
+    elif task_type == "W":
+        seeking_criteria = sum(get_Wi(sorted_solved_jobs))
+        text_description = "мінімальною сумарною тривалістю очікування"
 
     sorted_solved_jobs += ["-"] * (10 - len(sorted_solved_jobs))
     alternate_optimums = list(range(1, 37))
-    crit_values = [int(Fi_value * uniform(0.5, 1.5)) for _ in range(20)]
-    if Fi_value not in crit_values:
-        crit_values.append(Fi_value)
-    shuffle(crit_values)
+
+    # Генерація варіантів для значення критерію
+    crit_values = [int(seeking_criteria * uniform(0.5, 1.5)) for _ in range(20)]
+
+    if seeking_criteria not in crit_values:
+        crit_values.append(seeking_criteria)
+
+    shuffle(crit_values)  # Перемішуємо згенеровані варіанти
 
     # Продовження генерації XML-файлу
     questiontext_text.text = f"""
         <![CDATA[
-        <p dir="ltr"">Для системи з \( n={len(schedule_items)}, m=1 \) скласти розклад <strong>мінімальною сумарною тривалістю проходження</strong></p>
+        <p dir="ltr"">Для системи з \( n={len(schedule_items)}, m=1 \) скласти розклад <strong>{text_description}</strong></p>
         <p></p>
         Результуючий розклад: {' '.join([f"[[{option_blocks.index(format_job_tuple_to_string(item)) + 1}]]" for item in sorted_solved_jobs])}
         <br>
         <p></p>
         Кількість альтернативних оптимумів: [[{len(option_blocks) + 1 + alternate_optimums.index(alt_opts)}]]
         <br>
-        Значення критерію: [[{1 + len(option_blocks) + len(alternate_optimums) + crit_values.index(Fi_value)}]]
+        Значення критерію: [[{1 + len(option_blocks) + len(alternate_optimums) + crit_values.index(seeking_criteria)}]]
         <br>
         <em>Перетягнути наступні елементи на відповідні їм місця.</em>
         <br>
@@ -88,6 +113,7 @@ def generate_quiz_xml(
     jobs_duration_max,
     tests_amount,
     test_name,
+    task_type,
 ):
     """Генерує xml з тестовими питаннями"""
 
@@ -101,6 +127,7 @@ def generate_quiz_xml(
             jobs_amount_max,
             jobs_duration_min,
             jobs_duration_max,
+            task_type,
         )
         quiz.append(question)
 

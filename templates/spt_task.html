@@ -8,7 +8,7 @@
 <div class="jumbotron d-flex align-items-center min-vh-100">
     <div class="container w-50 border border-3 border-secondary rounded-4 px-5">
         <h1 class="text-center">Категорія тестових питань</h1>
-        <h2 class="text-center">1 || <span>&Sigma;</span>F<sub>j</sub> → min</h2>
+        <h2 class="text-center">1 || <span>&Sigma;</span>{{ task_type }}<sub>j</sub> → min</h2>
         <div class="container border border-2 border-secondary rounded-2 my-4 py-2">
             <h5>Дано:</h5>
             <span>1 машина, n робіт.<br>
@@ -62,6 +62,7 @@
                     </div>
                 </div>
             </div>
+            <input type="hidden" name="task_type" value="{{ task_type }}">
             <div class="row justify-content-center mb-3 mx-2">
                 <button type="submit" class="btn btn-primary">Згенерувати тестові питання</button>
             </div>

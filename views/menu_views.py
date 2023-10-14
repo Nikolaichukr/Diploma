@@ -1,3 +1,5 @@
+"""Цей файл відповідає за views (відображення) для меню та підменю"""
+
 from flask import Blueprint, render_template
 
 menu = Blueprint("menu", __name__)

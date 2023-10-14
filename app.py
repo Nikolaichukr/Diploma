@@ -1,3 +1,5 @@
+"""Основний файл - запускає веб-сервер"""
+
 from flask import Flask, render_template
 from views import *
 
@@ -10,6 +12,8 @@ app.register_blueprint(spt_tasks, url_prefix="/spt_task")
 
 @app.errorhandler(500)
 def app_internal_server_error(error):
+    """При виникненні помилок, виводимо інформацію у браузері"""
+
     return (
         render_template(
             "app_error.html", error_message=error.original_exception, title="Помилка"

@@ -1,17 +1,25 @@
-from flask import Blueprint, render_template, request, make_response
+"""
+Цей файл відповідає за views (відображення) для задач,
+які враховують кількість робіт, що запізнюються (не запізнюються)
+"""
+
+from flask import Blueprint, render_template, request
 from utils.delayed_tasks.generate_xml import generate_quiz_xml
+from utils.request_utils import respond_with_file, get_job_values
 
 delayed_tasks = Blueprint("delayed_tasks", __name__)
 
 
 @delayed_tasks.route("/handle_post", methods=["POST"])
 def handle_post_request():
-    jobs_amount_min = int(request.form.get("jobs_amount_min"))
-    jobs_amount_max = int(request.form.get("jobs_amount_max"))
-    jobs_duration_min = int(request.form.get("jobs_duration_min"))
-    jobs_duration_max = int(request.form.get("jobs_duration_max"))
-    tests_amount = int(request.form.get("tests_amount"))
-    test_name = str(request.form.get("test_name"))
+    (
+        jobs_amount_min,
+        jobs_amount_max,
+        jobs_duration_min,
+        jobs_duration_max,
+        tests_amount,
+        test_name,
+    ) = get_job_values()
     is_min_task = bool(int(request.form.get("is_min_task")))
     is_delayed = bool(int(request.form.get("is_delayed")))
 
@@ -26,14 +34,7 @@ def handle_post_request():
         is_delayed,
     )
 
-    # Create a response with appropriate headers to force file download
-    response = make_response(xml_content)
-    response.headers.set("Content-Type", "application/xml")
-    response.headers.set(
-        "Content-Disposition", "attachment", filename="generated_file.xml"
-    )
-
-    return response
+    return respond_with_file(xml_content=xml_content, custom_filename=test_name)
 
 
 @delayed_tasks.route("/min_delayed", methods=["GET"])

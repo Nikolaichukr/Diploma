@@ -1,3 +1,5 @@
+"""Цей файл містить набір функцій, які використовуються при роботі генерації XML-файлу"""
+
 import xml.etree.ElementTree as ET
 from html import unescape
 from lxml import etree

@@ -1,8 +1,10 @@
+"""Цей файл генерує XML-код, що описує набір задач"""
+
 import xml.etree.ElementTree as ET
 from math import factorial
 from utils.delayed_tasks.solver import solve
 from utils.delayed_tasks.task_generator import generate_problem_data
-from utils.general_purpose import tab, add_tag, add_dragbox, prettify
+from utils.xml_utils import tab, add_tag, add_dragbox, prettify
 
 
 def create_question_element(
@@ -49,7 +51,7 @@ def create_question_element(
 
     questiontext_text.text = f"""
         <![CDATA[
-        <p dir="ltr"">Для системи з <i>n</i> = {jobs_amount}, <i>m</i> = 1 скласти розклад у якого досягає <b>{['максимуму', 'мінімуму'][is_min_task]} кількість робіт, що {['НЕ ', ''][is_delayed]}запізнюються</b>.</p>
+        <p dir="ltr"">Для системи з \( n={jobs_amount}, m=1 \) скласти розклад у якого досягає <b>{['максимуму', 'мінімуму'][is_min_task]} кількість робіт, що {['НЕ ', ''][is_delayed]}запізнюються</b>.</p>
 
         <table width="280" cellspacing="0" cellpadding="0" border="2">
             <colgroup>

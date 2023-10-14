@@ -1,3 +1,5 @@
+"""Цей файл містить увесь потрібний код для розв'язання завдання"""
+
 from utils.SPT.task_generator import generate_problem_data, format_job_tuple_to_string
 from collections import Counter
 from math import factorial, prod
