@@ -2,8 +2,12 @@
 
 import xml.etree.ElementTree as ET
 from utils.xml_utils import add_tag, add_dragbox, prettify
-from utils.SPT.task_generator import generate_problem_data, format_job_tuple_to_string
-from utils.SPT.solver import solve_SPT, get_TiFi, get_Li, get_Wi
+from utils.SPT_LPT.task_generator import (
+    generate_problem_data,
+    format_job_tuple_to_string,
+)
+from utils.SPT_LPT.solver import solve_SPT_LPT, get_TiFi, get_Li, get_Wi
+from utils.SPT_LPT.helper import get_description
 from random import uniform, shuffle
 
 
@@ -15,6 +19,7 @@ def create_question_element(
     jobs_duration_min,
     jobs_duration_max,
     task_type,
+    rule,
 ):
     """Генерує одне тестове питання в xml-форматі, на основі вхідних даних"""
 
@@ -36,21 +41,17 @@ def create_question_element(
     additional_blocks = ["(", ")", "-"]
     option_blocks = formatted_blocks + additional_blocks
 
-    sorted_solved_jobs, alt_opts = solve_SPT(schedule_items)
+    sorted_solved_jobs, alt_opts = solve_SPT_LPT(schedule_items, rule=rule)
     seeking_criteria, text_description = None, None
 
     if task_type == "F":
         seeking_criteria = sum(get_TiFi(sorted_solved_jobs))
-        text_description = "мінімальною сумарною тривалістю проходження"
     elif task_type == "L":
         seeking_criteria = sum(get_Li(sorted_solved_jobs))
-        text_description = "мінімальним сумарним часовим зміщенням"
     elif task_type == "T":
         seeking_criteria = sum(get_TiFi(sorted_solved_jobs))
-        text_description = "мінімальним сумарним часом закінчення"
     elif task_type == "W":
         seeking_criteria = sum(get_Wi(sorted_solved_jobs))
-        text_description = "мінімальною сумарною тривалістю очікування"
 
     sorted_solved_jobs += ["-"] * (10 - len(sorted_solved_jobs))
     alternate_optimums = list(range(1, 37))
@@ -66,7 +67,7 @@ def create_question_element(
     # Продовження генерації XML-файлу
     questiontext_text.text = f"""
         <![CDATA[
-        <p dir="ltr"">Для системи з \( n={len(schedule_items)}, m=1 \) скласти розклад <strong>{text_description}</strong></p>
+        <p dir="ltr"">Для системи з \( n={len(schedule_items)}, m=1 \) скласти <strong>{get_description(rule, task_type)}</strong></p>
         <p></p>
         Результуючий розклад: {' '.join([f"[[{option_blocks.index(format_job_tuple_to_string(item)) + 1}]]" for item in sorted_solved_jobs])}
         <br>
@@ -114,6 +115,7 @@ def generate_quiz_xml(
     tests_amount,
     test_name,
     task_type,
+    rule,
 ):
     """Генерує xml з тестовими питаннями"""
 
@@ -128,6 +130,7 @@ def generate_quiz_xml(
             jobs_duration_min,
             jobs_duration_max,
             task_type,
+            rule,
         )
         quiz.append(question)
 

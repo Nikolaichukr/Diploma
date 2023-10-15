@@ -1,6 +1,9 @@
 """Цей файл містить увесь потрібний код для розв'язання завдання"""
 
-from utils.SPT.task_generator import generate_problem_data, format_job_tuple_to_string
+from utils.SPT_LPT.task_generator import (
+    generate_problem_data,
+    format_job_tuple_to_string,
+)
 from collections import Counter
 from math import factorial, prod
 
@@ -90,12 +93,16 @@ def get_Li(lst):
     return list(map(lambda x: x[0] - x[1], zip(Ti, [item[2] for item in clean_lst])))
 
 
-def solve_SPT(problem_list):
+def solve_SPT_LPT(problem_list, rule):
     """
     Сортує роботи за неспаданням тривалостей (SPT), а якщо тривалості однакові,
     то за зростанням порядкового номера роботи
     """
-    sorted_problem_list = sorted(problem_list, key=lambda x: (x[1], x[0]))
+
+    reversed_flag = True if rule == "LPT" else False
+    sorted_problem_list = sorted(
+        problem_list, key=lambda x: x[1], reverse=reversed_flag
+    )
 
     return identify_alternative_optimums(sorted_problem_list)
 
@@ -108,7 +115,7 @@ if __name__ == "__main__":
         print(format_job_tuple_to_string(k))
 
     print("\nSolved data:")
-    solved, alt_opts = solve_SPT(gen_lst)
+    solved, alt_opts = solve_SPT_LPT(gen_lst, rule="SPT")
     for k in solved:
         print(format_job_tuple_to_string(k))
 

@@ -1,19 +1,22 @@
+{% set title = rule ~ ' ' ~ task_type %}
 {% include 'partials/header.html' %}
 
 <div class="position-fixed" style="top: 25px; left: 25px;">
-    <a href="{{ url_for('menu.spt_menu') }}" class="btn btn-primary"> <span aria-hidden="true">&larr;</span>
+    <a href="{{ url_for('menu.spt_menu') if rule == 'SPT' else url_for('menu.lpt_menu') }}" class="btn btn-primary">
+        <span aria-hidden="true">&larr;</span>
         Назад до меню</a>
 </div>
 
 <div class="jumbotron d-flex align-items-center min-vh-100">
     <div class="container w-50 border border-3 border-secondary rounded-4 px-5">
         <h1 class="text-center">Категорія тестових питань</h1>
-        <h2 class="text-center">1 || <span>&Sigma;</span>{{ task_type }}<sub>j</sub> → min</h2>
+        <h2 class="text-center">1 || <span>&Sigma;</span>{{ task_type }}<sub>j</sub>
+            → {{ 'min' if rule == 'SPT' else 'max' }}</h2>
         <div class="container border border-2 border-secondary rounded-2 my-4 py-2">
             <h5>Дано:</h5>
             <span>1 машина, n робіт.<br>
                 t<sub>i</sub> - тривалості робіт.<br>
-                Скласти розклад, з мінімальною сумарною тривалістю проходження робіт.
+                Скласти {{ description(rule, task_type) }}
             </span>
         </div>
         <form method="post" action="{{ url_for('spt_tasks.handle_post_request') }}">
@@ -63,6 +66,7 @@
                 </div>
             </div>
             <input type="hidden" name="task_type" value="{{ task_type }}">
+            <input type="hidden" name="rule" value="{{ rule }}">
             <div class="row justify-content-center mb-3 mx-2">
                 <button type="submit" class="btn btn-primary">Згенерувати тестові питання</button>
             </div>

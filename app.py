@@ -2,12 +2,16 @@
 
 from flask import Flask, render_template
 from views import *
+from utils.SPT_LPT.helper import get_description
 
 app = Flask(__name__)
 
 app.register_blueprint(menu, url_prefix="/")
 app.register_blueprint(delayed_tasks, url_prefix="/delayed_task")
 app.register_blueprint(spt_tasks, url_prefix="/spt_task")
+app.register_blueprint(lpt_tasks, url_prefix="/lpt_task")
+
+app.jinja_env.globals.update(description=get_description)
 
 
 @app.errorhandler(500)
