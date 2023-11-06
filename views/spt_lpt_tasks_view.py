@@ -35,6 +35,7 @@ def handle_post_request():
         test_name,
         task_type,
         rule,
+        weighted,
     )
 
     return respond_with_file(xml_content=xml_content, custom_filename=test_name)
@@ -45,9 +46,9 @@ def task_page(rule, task):
     """Використовуємо динамічну маршрутизацію для уніфікації коду"""
 
     if "u" in rule:
-        rule, weighted = rule.strip("u"), True
+        rule, weighted = rule.strip("u"), 1
     else:
-        weighted = False
+        weighted = 0
     if rule in RULE_TYPE and task in TASK_TYPE:
         return render_template(
             "spt_lpt.html", task_type=task, rule=rule.upper(), weighted=weighted

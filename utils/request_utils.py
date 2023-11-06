@@ -1,6 +1,7 @@
 """Цей файл містить набір функцій, які використовуються при обробці запиту на генерацію XML-файлу"""
 
 from flask import make_response, request
+from urllib.parse import quote
 
 
 def respond_with_file(xml_content: str, custom_filename: str = None):
@@ -10,10 +11,13 @@ def respond_with_file(xml_content: str, custom_filename: str = None):
     if custom_filename:
         filename = f"{custom_filename.lower()}.xml"
 
+    # Допомагає виправити помилку з кирилицею в назві файлу
+    filename_encoded = quote(filename, safe="", encoding="utf-8")
+
     # Створюємо відповідь з відповідними заголовками, аби браузер почав завантаження файлу
     response = make_response(xml_content)
     response.headers.set("Content-Type", "application/xml")
-    response.headers.set("Content-Disposition", "attachment", filename=filename)
+    response.headers.set("Content-Disposition", "attachment", filename=filename_encoded)
 
     return response
 

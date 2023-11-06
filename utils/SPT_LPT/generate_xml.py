@@ -42,7 +42,9 @@ def create_question_element(
     additional_blocks = ["(", ")", "-"]
     option_blocks = formatted_blocks + additional_blocks
 
-    sorted_solved_jobs, alt_opts = solve_SPT_LPT(schedule_items, rule=rule)
+    sorted_solved_jobs, alt_opts = solve_SPT_LPT(
+        schedule_items, rule=rule, weighted=weighted
+    )
     seeking_criteria, text_description = None, None
 
     if task_type == "F":

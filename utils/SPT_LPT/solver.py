@@ -93,7 +93,7 @@ def get_Li(lst):
     return list(map(lambda x: x[0] - x[1], zip(Ti, [item[2] for item in clean_lst])))
 
 
-def solve_SPT_LPT(problem_list, rule):
+def solve_SPT_LPT(problem_list, rule, weighted):
     """
     Сортує роботи за неспаданням тривалостей (SPT), а якщо тривалості однакові,
     то за зростанням порядкового номера роботи
