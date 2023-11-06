@@ -1,25 +1,22 @@
 {% set title = rule ~ ' ' ~ task_type %}
 {% include 'partials/header.html' %}
 
-<div class="position-fixed" style="top: 25px; left: 25px;">
-    <a href="{{ url_for('menu.spt_menu') if rule == 'SPT' else url_for('menu.lpt_menu') }}" class="btn btn-primary">
-        <span aria-hidden="true">&larr;</span>
-        Назад до меню</a>
-</div>
+{% include 'partials/back_to_menu.html' %}
 
 <div class="jumbotron d-flex align-items-center min-vh-100">
     <div class="container w-50 border border-3 border-secondary rounded-4 px-5">
         <h1 class="text-center">Категорія тестових питань</h1>
-        <h2 class="text-center">1 || <span>&Sigma;</span>{{ task_type }}<sub>j</sub>
+        <h2 class="text-center">1 ||
+            <span>&Sigma;</span>{{ ('u<sub>j</sub> ' if weighted else '') | safe }}{{ task_type }}<sub>j</sub>
             → {{ 'min' if rule == 'SPT' else 'max' }}</h2>
         <div class="container border border-2 border-secondary rounded-2 my-4 py-2">
             <h5>Дано:</h5>
             <span>1 машина, n робіт.<br>
                 t<sub>i</sub> - тривалості робіт.<br>
-                Скласти {{ description(rule, task_type) }}
+                Скласти {{ description(rule, task_type, weighted) }}
             </span>
         </div>
-        <form method="post" action="{{ url_for('spt_tasks.handle_post_request') }}">
+        <form method="post" action="{{ url_for('spt_lpt_tasks.handle_post_request') }}">
             <div class="container border border-2 border-secondary rounded-2 my-4 py-2">
                 <h5>Параметри робіт</h5>
                 <div class="row mb-3">
@@ -67,6 +64,7 @@
             </div>
             <input type="hidden" name="task_type" value="{{ task_type }}">
             <input type="hidden" name="rule" value="{{ rule }}">
+            <input type="hidden" name="is_weighted" value="{{ weighted }}">
             <div class="row justify-content-center mb-3 mx-2">
                 <button type="submit" class="btn btn-primary">Згенерувати тестові питання</button>
             </div>

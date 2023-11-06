@@ -12,18 +12,22 @@
         </div>
         <div class="row justify-content-center">
             <div class="col-md-5 mb-3 text-center">
-                <a href="{{ url_for('menu.spt_menu') }}" class="btn btn-primary btn-block btn-lg w-100">SPT</a>
+                <a href="{{ url_for('menu.menu_view', menu_type='spt') }}"
+                   class="btn btn-primary btn-block btn-lg w-100">SPT</a>
             </div>
             <div class="col-md-5 mb-3 text-center">
-                <a href="{{ url_for('menu.lpt_menu') }}" class="btn btn-primary btn-block btn-lg w-100">LPT</a>
+                <a href="{{ url_for('menu.menu_view', menu_type='lpt') }}"
+                   class="btn btn-primary btn-block btn-lg w-100">LPT</a>
             </div>
         </div>
         <div class="row justify-content-center">
             <div class="col-md-5 mb-3 text-center">
-                <a href="{{ url_for('menu.sptu_menu') }}" class="btn btn-primary btn-block btn-lg w-100">SPT<sub>u</sub></a>
+                <a href="{{ url_for('menu.menu_view', menu_type='sptu') }}"
+                   class="btn btn-primary btn-block btn-lg w-100">SPT<sub>u</sub></a>
             </div>
             <div class="col-md-5 mb-3 text-center">
-                <a href="{{ url_for('menu.lptu_menu') }}" class="btn btn-primary btn-block btn-lg w-100">LPT<sub>u</sub></a>
+                <a href="{{ url_for('menu.menu_view', menu_type='lptu') }}"
+                   class="btn btn-primary btn-block btn-lg w-100">LPT<sub>u</sub></a>
             </div>
         </div>
     </div>

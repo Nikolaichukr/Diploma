@@ -17,21 +17,12 @@ def delayed_tasks_menu():
     )
 
 
-@menu.route("/lpt_menu")
-def lpt_menu():
-    return render_template("menu_templates/lpt_menu.html", title="Меню LPT задач")
+@menu.route("/<string:menu_type>_menu")
+def menu_view(menu_type):
+    allowed_routes = ["lpt", "spt", "lptu", "sptu"]
+    if menu_type not in allowed_routes:
+        return "Invalid page.", 404
 
+    template = f"menu_templates/{menu_type}_menu.html"
 
-@menu.route("/spt_menu")
-def spt_menu():
-    return render_template("menu_templates/spt_menu.html", title="Меню SPT задач")
-
-
-@menu.route("/lptu_menu")
-def lptu_menu():
-    return render_template("menu_templates/lptu_menu.html", title="Меню LPTu задач")
-
-
-@menu.route("/sptu_menu")
-def sptu_menu():
-    return render_template("menu_templates/sptu_menu.html", title="Меню SPTu задач")
+    return render_template(template, title=f"Меню {menu_type.upper()} задач")

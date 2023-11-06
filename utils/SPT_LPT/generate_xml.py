@@ -20,6 +20,7 @@ def create_question_element(
     jobs_duration_max,
     task_type,
     rule,
+    weighted,
 ):
     """Генерує одне тестове питання в xml-форматі, на основі вхідних даних"""
 
@@ -67,7 +68,7 @@ def create_question_element(
     # Продовження генерації XML-файлу
     questiontext_text.text = f"""
         <![CDATA[
-        <p dir="ltr"">Для системи з \( n={len(schedule_items)}, m=1 \) скласти <strong>{get_description(rule, task_type)}</strong></p>
+        <p dir="ltr"">Для системи з \( n={len(schedule_items)}, m=1 \) скласти <strong>{get_description(rule, task_type, weighted)}</strong></p>
         <p></p>
         Результуючий розклад: {' '.join([f"[[{option_blocks.index(format_job_tuple_to_string(item)) + 1}]]" for item in sorted_solved_jobs])}
         <br>
@@ -116,6 +117,7 @@ def generate_quiz_xml(
     test_name,
     task_type,
     rule,
+    weighted,
 ):
     """Генерує xml з тестовими питаннями"""
 
@@ -131,6 +133,7 @@ def generate_quiz_xml(
             jobs_duration_max,
             task_type,
             rule,
+            weighted,
         )
         quiz.append(question)
 
@@ -138,5 +141,5 @@ def generate_quiz_xml(
 
 
 if __name__ == "__main__":
-    xml_output = generate_quiz_xml(5, 7, 5, 25, 1, "SPT_F")
+    xml_output = generate_quiz_xml(5, 7, 5, 25, 1, "SPT_F", "F", "SPT", True)
     print(xml_output)

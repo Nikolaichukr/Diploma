@@ -1,0 +1,13 @@
+<div class="position-fixed" style="top: 25px; left: 25px;">
+    <a href="
+        {% if rule == 'SPT' and not weighted %}
+            {{ url_for('menu.menu_view', menu_type='spt') }}
+        {% elif rule == 'LPT' and not weighted %}
+            {{ url_for('menu.menu_view', menu_type='lpt') }}
+        {% elif rule == 'SPT' and weighted %}
+            {{ url_for('menu.menu_view', menu_type='sptu') }}
+        {% elif rule == 'LPT' and weighted %}
+            {{ url_for('menu.menu_view', menu_type='lptu') }}
+        {% endif %}
+    " class="btn btn-primary"><span aria-hidden="true">&larr;</span>Назад до меню</a>
+</div>

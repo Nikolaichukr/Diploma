@@ -1,7 +1,7 @@
 """Цей файл містить допоміжні функції"""
 
 
-def get_description(rule, task_type):
+def get_description(rule, task_type, weighted):
     """Повертає текстовий опис розкладу на основі типу правила та типу задачі"""
 
     text_description = "розклад з "
@@ -12,12 +12,20 @@ def get_description(rule, task_type):
         text_description += "максимальн"
 
     if task_type == "F":
-        text_description += "ою сумарною тривалістю проходження"
+        text_description += (
+            f"ою сумарною {'зваженою ' if weighted else ''}тривалістю проходження"
+        )
     elif task_type == "W":
-        text_description += "ою сумарною тривалістю очікування"
+        text_description += (
+            f"ою сумарною {'зваженою ' if weighted else ''}тривалістю очікування"
+        )
     elif task_type == "L":
-        text_description += "им сумарним часовим зміщенням"
+        text_description += (
+            f"им сумарним {'зваженим ' if weighted else ''}часовим зміщенням"
+        )
     elif task_type == "T":
-        text_description += "им сумарним часом закінчення"
+        text_description += (
+            f"им сумарним {'зваженим ' if weighted else ''}часом закінчення"
+        )
 
     return text_description + " робіт."

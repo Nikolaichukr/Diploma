@@ -8,8 +8,7 @@ app = Flask(__name__)
 
 app.register_blueprint(menu, url_prefix="/")
 app.register_blueprint(delayed_tasks, url_prefix="/delayed_task")
-app.register_blueprint(spt_tasks, url_prefix="/spt_task")
-app.register_blueprint(lpt_tasks, url_prefix="/lpt_task")
+app.register_blueprint(spt_lpt_tasks, url_prefix="/spt_lpt")
 
 app.jinja_env.globals.update(description=get_description)
 
@@ -24,6 +23,11 @@ def app_internal_server_error(error):
         ),
         500,
     )
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template("404.html"), 404
 
 
 if __name__ == "__main__":

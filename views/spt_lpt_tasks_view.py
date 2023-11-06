@@ -1,14 +1,16 @@
 """Цей файл відповідає за views (відображення) для SPT та LPT-задач"""
 
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, abort
 from utils.SPT_LPT.generate_xml import generate_quiz_xml
 from utils.request_utils import respond_with_file, get_job_values
 
-spt_tasks = Blueprint("spt_tasks", __name__)
-lpt_tasks = Blueprint("lpt_tasks", __name__)
+spt_lpt_tasks = Blueprint("spt_lpt_tasks", __name__)
+
+RULE_TYPE = ["SPT", "LPT", "SPTu", "LPTu"]
+TASK_TYPE = ["F", "L", "T", "W"]
 
 
-@spt_tasks.route("/handle_post", methods=["POST"])
+@spt_lpt_tasks.route("/handle_post", methods=["POST"])
 def handle_post_request():
     """Обробка запиту на генерацію XML-файлу"""
 
@@ -22,6 +24,7 @@ def handle_post_request():
     ) = get_job_values()
     task_type = str(request.form.get("task_type"))
     rule = str(request.form.get("rule"))
+    weighted = bool(int(request.form.get("is_weighted")))
 
     xml_content = generate_quiz_xml(
         jobs_amount_min,
@@ -37,41 +40,17 @@ def handle_post_request():
     return respond_with_file(xml_content=xml_content, custom_filename=test_name)
 
 
-@spt_tasks.route("/spt_F", methods=["GET"])
-def spt_f_page():
-    return render_template("spt_lpt.html", task_type="F", rule="SPT")
+@spt_lpt_tasks.route("/<rule>_<task>", methods=["GET"])
+def task_page(rule, task):
+    """Використовуємо динамічну маршрутизацію для уніфікації коду"""
 
-
-@spt_tasks.route("/spt_L", methods=["GET"])
-def spt_l_page():
-    return render_template("spt_lpt.html", task_type="L", rule="SPT")
-
-
-@spt_tasks.route("/spt_T", methods=["GET"])
-def spt_t_page():
-    return render_template("spt_lpt.html", task_type="T", rule="SPT")
-
-
-@spt_tasks.route("/spt_W", methods=["GET"])
-def spt_w_page():
-    return render_template("spt_lpt.html", task_type="W", rule="SPT")
-
-
-@lpt_tasks.route("/lpt_F", methods=["GET"])
-def lpt_f_page():
-    return render_template("spt_lpt.html", task_type="F", rule="LPT")
-
-
-@lpt_tasks.route("/lpt_L", methods=["GET"])
-def lpt_l_page():
-    return render_template("spt_lpt.html", task_type="L", rule="LPT")
-
-
-@lpt_tasks.route("/lpt_T", methods=["GET"])
-def lpt_t_page():
-    return render_template("spt_lpt.html", task_type="T", rule="LPT")
-
-
-@lpt_tasks.route("/lpt_W", methods=["GET"])
-def lpt_w_page():
-    return render_template("spt_lpt.html", task_type="W", rule="LPT")
+    if "u" in rule:
+        rule, weighted = rule.strip("u"), True
+    else:
+        weighted = False
+    if rule in RULE_TYPE and task in TASK_TYPE:
+        return render_template(
+            "spt_lpt.html", task_type=task, rule=rule.upper(), weighted=weighted
+        )
+    else:
+        abort(404)
