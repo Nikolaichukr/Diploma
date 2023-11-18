@@ -1,8 +1,9 @@
 """Цей файл містить увесь потрібний код для генерації завдання"""
 
 import random
-import numpy as np
 from typing import List
+
+import numpy as np
 
 
 def generate_job_durations(

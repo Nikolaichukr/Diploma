@@ -8,7 +8,7 @@ import xml.etree.ElementTree as ET
 
 from bs4 import BeautifulSoup
 
-from utils.delayed_tasks.solver import solve, normalize_schedule_string
+from utils.delayed_tasks.solver import normalize_schedule_string, solve
 
 
 def extract_quiz_tags(xml_file):

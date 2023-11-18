@@ -1,14 +1,13 @@
 """Цей файл генерує XML-код, що описує набір задач"""
 
 import xml.etree.ElementTree as ET
-from utils.xml_utils import add_tag, add_dragbox, prettify
-from utils.SPT_LPT.task_generator import (
-    generate_problem_data,
-    format_job_tuple_to_string,
-)
-from utils.SPT_LPT.solver import solve_SPT_LPT, get_TiFi, get_Li, get_Wi
+from random import shuffle, uniform
+
 from utils.SPT_LPT.helper import get_description
-from random import uniform, shuffle
+from utils.SPT_LPT.solver import get_seeking_criteria, solve_SPT_LPT
+from utils.SPT_LPT.task_generator import (format_job_tuple_to_string,
+                                          generate_problem_data)
+from utils.xml_utils import add_dragbox, add_tag, prettify
 
 
 def create_question_element(
@@ -45,16 +44,7 @@ def create_question_element(
     sorted_solved_jobs, alt_opts = solve_SPT_LPT(
         schedule_items, rule=rule, weighted=weighted
     )
-    seeking_criteria, text_description = None, None
-
-    if task_type == "F":
-        seeking_criteria = sum(get_TiFi(sorted_solved_jobs))
-    elif task_type == "L":
-        seeking_criteria = sum(get_Li(sorted_solved_jobs))
-    elif task_type == "T":
-        seeking_criteria = sum(get_TiFi(sorted_solved_jobs))
-    elif task_type == "W":
-        seeking_criteria = sum(get_Wi(sorted_solved_jobs))
+    seeking_criteria = get_seeking_criteria(task_type, weighted, sorted_solved_jobs)
 
     sorted_solved_jobs += ["-"] * (10 - len(sorted_solved_jobs))
     alternate_optimums = list(range(1, 37))

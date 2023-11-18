@@ -2,9 +2,10 @@
 
 import xml.etree.ElementTree as ET
 from math import factorial
+
 from utils.delayed_tasks.solver import solve
 from utils.delayed_tasks.task_generator import generate_problem_data
-from utils.xml_utils import tab, add_tag, add_dragbox, prettify
+from utils.xml_utils import add_dragbox, add_tag, prettify, tab
 
 
 def create_question_element(

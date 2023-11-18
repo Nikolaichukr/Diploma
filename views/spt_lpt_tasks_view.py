@@ -1,8 +1,9 @@
 """Цей файл відповідає за views (відображення) для SPT та LPT-задач"""
 
-from flask import Blueprint, render_template, request, abort
+from flask import Blueprint, abort, render_template, request
+
+from utils.request_utils import get_job_values, respond_with_file
 from utils.SPT_LPT.generate_xml import generate_quiz_xml
-from utils.request_utils import respond_with_file, get_job_values
 
 spt_lpt_tasks = Blueprint("spt_lpt_tasks", __name__)
 

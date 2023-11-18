@@ -4,8 +4,9 @@
 """
 
 from flask import Blueprint, render_template, request
+
 from utils.delayed_tasks.generate_xml import generate_quiz_xml
-from utils.request_utils import respond_with_file, get_job_values
+from utils.request_utils import get_job_values, respond_with_file
 
 delayed_tasks = Blueprint("delayed_tasks", __name__)
 

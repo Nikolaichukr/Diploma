@@ -1,7 +1,8 @@
 """Цей файл містить набір функцій, які використовуються при обробці запиту на генерацію XML-файлу"""
 
-from flask import make_response, request
 from urllib.parse import quote
+
+from flask import make_response, request
 
 
 def respond_with_file(xml_content: str, custom_filename: str = None):

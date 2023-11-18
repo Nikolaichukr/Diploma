@@ -1,8 +1,9 @@
 """Основний файл - запускає веб-сервер"""
 
 from flask import Flask, render_template
-from views import *
+
 from utils.SPT_LPT.helper import get_description
+from views import *
 
 app = Flask(__name__)
 
