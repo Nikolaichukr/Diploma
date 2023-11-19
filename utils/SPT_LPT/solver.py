@@ -125,6 +125,17 @@ def get_Li(lst):
     return list(map(lambda x: x[0] - x[1], zip(Ti, [item[2] for item in clean_lst])))
 
 
+def adjust_weight(seeking_criteria, sorted_solved_jobs):
+    """
+    Приймає на вхід список значень критеріїв та відсортований список кортежів робіт та
+    домножує значення критеріїв на відповідні їм значення ваг робіт
+    """
+
+    weights = list(map(lambda x: x[3], clean(sorted_solved_jobs)))
+
+    return [sk * w for sk, w in list(zip(seeking_criteria, weights))]
+
+
 def get_sort_key(weighted):
     """
     Допоміжна функція для визначення способу сортування робіт
@@ -152,14 +163,21 @@ def solve_SPT_LPT(problem_list, rule, weighted):
 
 
 def get_seeking_criteria(task_type, weighted, sorted_solved_jobs):
+    seeking_criteria = None
+
     if task_type == "F":
-        return sum(get_TiFi(sorted_solved_jobs))
+        seeking_criteria = get_TiFi(sorted_solved_jobs)
     elif task_type == "L":
-        return sum(get_Li(sorted_solved_jobs))
+        seeking_criteria = get_Li(sorted_solved_jobs)
     elif task_type == "T":
-        return sum(get_TiFi(sorted_solved_jobs))
+        seeking_criteria = get_TiFi(sorted_solved_jobs)
     elif task_type == "W":
-        return sum(get_Wi(sorted_solved_jobs))
+        seeking_criteria = get_Wi(sorted_solved_jobs)
+
+    if weighted:
+        seeking_criteria = adjust_weight(seeking_criteria, sorted_solved_jobs)
+
+    return sum(seeking_criteria)
 
 
 if __name__ == "__main__":
@@ -168,10 +186,19 @@ if __name__ == "__main__":
     print("Generated data:")
     for k in gen_lst:
         print(format_job_tuple_to_string(k))
-
+    gen_lst = [
+        (1, 4, 12, 5),
+        (2, 8, 19, 3),
+        (3, 2, 23, 2),
+        (4, 6, 15, 4),
+    ]
     print("\nSolved data:")
-    solved, alt_opts = solve_SPT_LPT(gen_lst, rule="SPT", weighted=True)
+    solved, alt_opts = solve_SPT_LPT(gen_lst, rule="SPT", weighted=False)
     for k in solved:
         print(format_job_tuple_to_string(k))
 
+    criteria = get_seeking_criteria(
+        task_type="F", weighted=False, sorted_solved_jobs=solved
+    )
+    print(criteria)
     print(alt_opts)
