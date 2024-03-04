@@ -1,7 +1,7 @@
 """Цей файл генерує XML-код, що описує набір задач"""
 
 import xml.etree.ElementTree as ET
-from random import shuffle, uniform
+from random import uniform
 
 from utils.SPT_LPT.helper import get_description
 from utils.SPT_LPT.solver import get_seeking_criteria, solve_SPT_LPT
@@ -50,13 +50,13 @@ def create_question_element(
     alternate_optimums = list(range(1, 37))
 
     # Генерація варіантів для значення критерію
-    crit_values = [int(seeking_criteria * uniform(0.25, 1.75)) for _ in range(35)]
+    crit_values = [int(seeking_criteria * uniform(0.3, 1.7)) for _ in range(25)]
 
     if seeking_criteria not in crit_values:
         crit_values.append(seeking_criteria)
 
-    crit_values = list(set(crit_values))
-    shuffle(crit_values)  # Перемішуємо згенеровані варіанти
+    crit_values = sorted(list(set(crit_values)))
+    # shuffle(crit_values)  # Перемішуємо згенеровані варіанти
 
     # Продовження генерації XML-файлу
     questiontext_text.text = f"""
