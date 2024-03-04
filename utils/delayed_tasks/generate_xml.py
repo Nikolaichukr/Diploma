@@ -50,7 +50,7 @@ def create_question_element(
     questiontext = ET.SubElement(question, "questiontext", format="html")
     questiontext_text = ET.SubElement(questiontext, "text")
 
-    questiontext_text.text = f"""
+    questiontext_text.text = rf"""
         <![CDATA[
         <p dir="ltr"">Для системи з \( n={jobs_amount}, m=1 \) скласти розклад у якого досягає <b>{['максимуму', 'мінімуму'][is_min_task]} кількість робіт, що {['НЕ ', ''][is_delayed]}запізнюються</b>.</p>
 
@@ -77,6 +77,8 @@ def create_question_element(
 
             </tbody>
         </table>
+        <br>
+        <p><i>У випадку альтернативних оптимумів використовувати дужки "(" та ")". В дужках номери робіт упорядковувати за зростанням.</i></p>
         <br>
         <p dir="ltr" style="text-align: left;">Оптимальний розклад: {' '.join([f'[[{opt_solution_options.index(i) + 1}]]' for i in res.replace(' ', '')])}</p>
         <p dir="ltr" style="text-align: left;">Опт. значення критерія: [[{len(opt_solution_options) + opt_crit_val_options.index(str(crit_val)) + 1}]]</p>

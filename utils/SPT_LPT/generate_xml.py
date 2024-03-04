@@ -50,11 +50,12 @@ def create_question_element(
     alternate_optimums = list(range(1, 37))
 
     # Генерація варіантів для значення критерію
-    crit_values = [int(seeking_criteria * uniform(0.5, 1.5)) for _ in range(20)]
+    crit_values = [int(seeking_criteria * uniform(0.25, 1.75)) for _ in range(35)]
 
     if seeking_criteria not in crit_values:
         crit_values.append(seeking_criteria)
 
+    crit_values = list(set(crit_values))
     shuffle(crit_values)  # Перемішуємо згенеровані варіанти
 
     # Продовження генерації XML-файлу
