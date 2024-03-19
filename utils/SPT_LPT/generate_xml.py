@@ -90,7 +90,10 @@ def create_question_element(
     add_tag(question, "shownumcorrect", "")
 
     for symbol in option_blocks:
-        add_dragbox(parent_tag=question, symbol=symbol, group=1)
+        if symbol in "()-":
+            add_dragbox(parent_tag=question, symbol=symbol, group=1, infinite=True)
+        else:
+            add_dragbox(parent_tag=question, symbol=symbol, group=1)
 
     for option in alternate_optimums:
         add_dragbox(parent_tag=question, symbol=option, group=2)

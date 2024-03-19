@@ -19,7 +19,7 @@ def add_tag(parent_element, tag, value):
     new_tag.text = value
 
 
-def add_dragbox(parent_tag, symbol, group):
+def add_dragbox(parent_tag, symbol, group, infinite=False):
     """Додає dragbox блоки (перетягування) до тесту"""
 
     dragbox = ET.SubElement(parent_tag, "dragbox")
@@ -27,7 +27,8 @@ def add_dragbox(parent_tag, symbol, group):
     dragbox_text.text = str(symbol)
     dragbox_group = ET.SubElement(dragbox, "group")
     dragbox_group.text = str(group)
-    ET.SubElement(dragbox, "infinite")
+    if infinite:
+        ET.SubElement(dragbox, "infinite")
 
 
 def prettify(xml_string):
