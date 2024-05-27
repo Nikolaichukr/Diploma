@@ -18,16 +18,13 @@ app.jinja_env.globals.update(description=get_description)
 def app_internal_server_error(error):
     """При виникненні помилок, виводимо інформацію у браузері"""
 
-    return (
-        render_template(
-            "app_error.html", error_message=error.original_exception, title="Помилка"
-        ),
-        500,
-    )
+    return (render_template("app_error.html", error_message=error.original_exception, title="Помилка"), 500)
 
 
 @app.errorhandler(404)
-def page_not_found(e):
+def app_page_not_found(error):
+    """Відпрацьовує, коли сторінку не знайдено"""
+
     return render_template("404.html"), 404
 
 

@@ -5,21 +5,12 @@ from random import uniform
 
 from utils.SPT_LPT.helper import get_description
 from utils.SPT_LPT.solver import get_seeking_criteria, solve_SPT_LPT
-from utils.SPT_LPT.task_generator import (format_job_tuple_to_string,
-                                          generate_problem_data)
-from utils.xml_utils import add_dragbox, add_tag, prettify
+from utils.SPT_LPT.task_generator import format_job_tuple_to_string, generate_order_problem_data
+from utils.common.xml_utils import add_dragbox, add_tag, prettify
 
 
 def create_question_element(
-    test_name,
-    i,
-    jobs_amount_min,
-    jobs_amount_max,
-    jobs_duration_min,
-    jobs_duration_max,
-    task_type,
-    rule,
-    weighted,
+    test_name, i, jobs_amount_min, jobs_amount_max, jobs_duration_min, jobs_duration_max, task_type, rule, weighted
 ):
     """Генерує одне тестове питання в xml-форматі, на основі вхідних даних"""
 
@@ -33,17 +24,13 @@ def create_question_element(
     questiontext_text = ET.SubElement(questiontext, "text")
 
     # Генерація даних для наповнення тесту
-    schedule_items = generate_problem_data(
-        jobs_amount_min, jobs_amount_max, jobs_duration_min, jobs_duration_max
-    )
+    schedule_items = generate_order_problem_data(jobs_amount_min, jobs_amount_max, jobs_duration_min, jobs_duration_max)
 
     formatted_blocks = [format_job_tuple_to_string(item) for item in schedule_items]
     additional_blocks = ["(", ")", "-"]
     option_blocks = formatted_blocks + additional_blocks
 
-    sorted_solved_jobs, alt_opts = solve_SPT_LPT(
-        schedule_items, rule=rule, weighted=weighted
-    )
+    sorted_solved_jobs, alt_opts = solve_SPT_LPT(schedule_items, rule=rule, weighted=weighted)
     seeking_criteria = get_seeking_criteria(task_type, weighted, sorted_solved_jobs)
 
     sorted_solved_jobs += ["-"] * (10 - len(sorted_solved_jobs))

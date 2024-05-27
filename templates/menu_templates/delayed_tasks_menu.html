@@ -8,14 +8,14 @@
             <br>(не запізнюються)</h1>
         <div class="row justify-content-center">
             <div class="col-md-5 mb-3 text-center">
-                <a href="{{ url_for('delayed_tasks.min_delayed_page') }}"
+                <a href="{{ url_for('delayed_tasks.delayed_task_page', min_max='min', delayed='delayed') }}"
                    class="btn btn-primary btn-block btn-lg w-100">1 |
                     d<sub>j</sub>=d |
                     <span>&Sigma;</span>U<sub>j</sub>
                     → min </a>
             </div>
             <div class="col-md-5 mb-3 text-center">
-                <a href="{{ url_for('delayed_tasks.max_delayed_page') }}"
+                <a href="{{ url_for('delayed_tasks.delayed_task_page', min_max='max', delayed='delayed') }}"
                    class="btn btn-primary btn-block btn-lg w-100">1 |
                     d<sub>j</sub>=d |
                     <span>&Sigma;</span>U<sub>j</sub>
@@ -24,14 +24,14 @@
         </div>
         <div class="row justify-content-center">
             <div class="col-md-5 mb-3 text-center">
-                <a href="{{ url_for('delayed_tasks.min_non_delayed_page') }}"
+                <a href="{{ url_for('delayed_tasks.delayed_task_page', min_max='min', delayed='nondelayed') }}"
                    class="btn btn-primary btn-block btn-lg w-100">1 |
                     d<sub>j</sub>=d |
                     <span>&Sigma;</span>U̅<sub>j</sub>
                     → min </a>
             </div>
             <div class="col-md-5 mb-3 text-center">
-                <a href="{{ url_for('delayed_tasks.max_non_delayed_page') }}"
+                <a href="{{ url_for('delayed_tasks.delayed_task_page', min_max='max', delayed='nondelayed') }}"
                    class="btn btn-primary btn-block btn-lg w-100">1 |
                     d<sub>j</sub>=d |
                     <span>&Sigma;</span>U̅<sub>j</sub>

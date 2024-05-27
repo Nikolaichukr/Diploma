@@ -20,9 +20,7 @@ import numpy as np
 from utils.delayed_tasks.solver import solve
 
 
-def generate_durations(
-    jobs_amount: int, jobs_duration_min: int, jobs_duration_max: int
-):
+def generate_durations(jobs_amount: int, jobs_duration_min: int, jobs_duration_max: int) -> List[int]:
     """Ця функція генерує jobs_amount випадкових чисел з заданого діапазону [jobs_duration_min; jobs_duration_max]"""
 
     if jobs_amount > (jobs_duration_max - jobs_duration_min + 1):
@@ -35,18 +33,13 @@ def generate_durations(
     job_durations = []
     while len(job_durations) < jobs_amount:
         number = int(random.normalvariate(mu, sigma))
-        if (
-            jobs_duration_min <= number <= jobs_duration_max
-            and number not in job_durations
-        ):
+        if jobs_duration_min <= number <= jobs_duration_max and number not in job_durations:
             job_durations.append(number)
 
     return job_durations
 
 
-def generate_ds(
-    mu: Union[int, float], sigma: Union[int, float], min_val: int, max_val: int
-):
+def generate_ds(mu: Union[int, float], sigma: Union[int, float], min_val: int, max_val: int) -> int:
     """Ця функція генерує значення директивного строку з використанням нормального розподілу"""
 
     ds = int(np.random.normal(mu, sigma))
@@ -80,12 +73,7 @@ def get_parts(job_durations: List[int], ds: int, is_min_task: bool, is_delayed: 
     return job_durations[:split_index], job_durations[split_index:]
 
 
-def is_min_max_a_not_a(
-    non_delayed_part: List[int],
-    delayed_part: List[int],
-    is_min_task: bool,
-    is_delayed: bool,
-):
+def is_min_max_a_not_a(non_delayed_part: List[int], delayed_part: List[int], is_min_task: bool, is_delayed: bool):
     """Перевірка умови min(pj) < max(pj), де min(pj) працює з множиною робіт, що не запізнюються, а max(pj) з множиною робіт, що запізнюються"""
 
     if is_min_task ^ is_delayed:
@@ -94,22 +82,16 @@ def is_min_max_a_not_a(
         return min(non_delayed_part) < max(delayed_part)
 
 
-def is_valid_data(
-    job_durations: List[int], ds: int, is_min_task: bool, is_delayed: bool
-):
+def is_valid_data(job_durations: List[int], ds: int, is_min_task: bool, is_delayed: bool):
     """Перевірка відповідності задачі всім необхідним умовам"""
 
-    non_delayed_part, delayed_part = get_parts(
-        job_durations, ds, is_min_task, is_delayed
-    )
+    non_delayed_part, delayed_part = get_parts(job_durations, ds, is_min_task, is_delayed)
 
     if (is_delayed and is_min_task) or (not is_delayed and not is_min_task):
         return all(
             [
                 min(job_durations) < ds < sum(job_durations),
-                is_min_max_a_not_a(
-                    non_delayed_part, delayed_part, is_min_task, is_delayed
-                ),
+                is_min_max_a_not_a(non_delayed_part, delayed_part, is_min_task, is_delayed),
             ]
         )
 
@@ -118,9 +100,7 @@ def is_valid_data(
             [
                 max(job_durations) < ds < sum(job_durations),
                 ds - sum(non_delayed_part) < min(delayed_part),
-                is_min_max_a_not_a(
-                    non_delayed_part, delayed_part, is_min_task, is_delayed
-                ),
+                is_min_max_a_not_a(non_delayed_part, delayed_part, is_min_task, is_delayed),
             ]
         )
 
@@ -138,13 +118,10 @@ def generate_raw_data(
     """Ця функція генерує дані для задачі - тривалості робіт та директивний строк, проте вони потребують додаткових перевірок"""
 
     jobs_amount = random.randint(jobs_amount_min, jobs_amount_max)
-    job_durations = generate_durations(
-        jobs_amount, jobs_duration_min, jobs_duration_max
-    )
+    job_durations = generate_durations(jobs_amount, jobs_duration_min, jobs_duration_max)
     ds = generate_ds(
         *calculate_mu_sigma(
-            (min(job_durations), max(job_durations))[is_min_task ^ is_delayed] + 1,
-            sum(job_durations) - 1,
+            (min(job_durations), max(job_durations))[is_min_task ^ is_delayed] + 1, sum(job_durations) - 1
         ),
         (min(job_durations), max(job_durations))[is_min_task ^ is_delayed],
         sum(job_durations),
@@ -164,22 +141,12 @@ def generate_problem_data(
     """Ця функція генерує дані для задачі з урахуванням всіх потрібних умов"""
 
     jobs_amount, job_durations, ds = generate_raw_data(
-        jobs_amount_min,
-        jobs_amount_max,
-        jobs_duration_min,
-        jobs_duration_max,
-        is_min_task,
-        is_delayed,
+        jobs_amount_min, jobs_amount_max, jobs_duration_min, jobs_duration_max, is_min_task, is_delayed
     )
 
     while not is_valid_data(job_durations, ds, is_min_task, is_delayed):
         jobs_amount, job_durations, ds = generate_raw_data(
-            jobs_amount_min,
-            jobs_amount_max,
-            jobs_duration_min,
-            jobs_duration_max,
-            is_min_task,
-            is_delayed,
+            jobs_amount_min, jobs_amount_max, jobs_duration_min, jobs_duration_max, is_min_task, is_delayed
         )
 
     return jobs_amount, job_durations, ds

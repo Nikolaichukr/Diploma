@@ -17,7 +17,7 @@
                 Скласти розклад, за якого досягає {{ 'мінімуму' if is_min else 'максимуму' }} кількість робіт, що {{ '' if is_delayed else 'не ' }}запізнюється.
             </span>
         </div>
-        <form method="post" action="{{ url_for('delayed_tasks.handle_post_request') }}">
+        <form method="post" action="{{ url_for('delayed_tasks.handle_delayed_post_request') }}">
             <div class="container border border-2 border-secondary rounded-2 my-4 py-2">
                 <h5>Параметри робіт</h5>
                 <div class="row mb-3">

@@ -7,11 +7,13 @@ menu = Blueprint("menu", __name__)
 
 @menu.route("/")
 def main_menu():
+    """Повертає сторінку головного меню"""
     return render_template("index.html", title="Головне меню")
 
 
 @menu.route("/delayed_tasks_menu")
 def delayed_tasks_menu():
+    """Повертає сторінку меню для задач на запізнення"""
     return render_template(
         "menu_templates/delayed_tasks_menu.html", title="Меню задач, що запізнюються"
     )
@@ -19,6 +21,8 @@ def delayed_tasks_menu():
 
 @menu.route("/<string:menu_type>_menu")
 def menu_view(menu_type):
+    """Повертає сторінку для динамічних маршрутів задач на упорядкування"""
+
     allowed_routes = ["lpt", "spt", "lptu", "sptu"]
     if menu_type not in allowed_routes:
         return "Invalid page.", 404

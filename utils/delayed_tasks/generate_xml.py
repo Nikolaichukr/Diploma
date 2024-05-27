@@ -5,42 +5,22 @@ from math import factorial
 
 from utils.delayed_tasks.solver import solve
 from utils.delayed_tasks.task_generator import generate_problem_data
-from utils.xml_utils import add_dragbox, add_tag, prettify, tab
+from utils.common.xml_utils import add_dragbox, add_tag, prettify, tab
 
 
 def create_question_element(
-    test_name,
-    jobs_amount_min,
-    jobs_amount_max,
-    jobs_duration_min,
-    jobs_duration_max,
-    is_min_task,
-    is_delayed,
-    i,
+    test_name, jobs_amount_min, jobs_amount_max, jobs_duration_min, jobs_duration_max, is_min_task, is_delayed, i
 ):
     """Генерує одне тестове питання в xml-форматі, на основі вхідних даних"""
 
     jobs_amount, job_durations, ds = generate_problem_data(
-        jobs_amount_min,
-        jobs_amount_max,
-        jobs_duration_min,
-        jobs_duration_max,
-        is_min_task,
-        is_delayed,
+        jobs_amount_min, jobs_amount_max, jobs_duration_min, jobs_duration_max, is_min_task, is_delayed
     )
     res, crit_val, opt_count = solve(job_durations, ds, is_min_task, is_delayed)
     opt_solution_options = "(" + "".join([str(i + 1) for i in range(jobs_amount)]) + ")"
     opt_crit_val_options = "".join(map(str, range(jobs_amount + 1)))
     alter_amount_options = list(
-        sorted(
-            set(
-                [
-                    factorial(i - j) * factorial(j)
-                    for i in range(jobs_amount + 1)
-                    for j in range(i // 2 + 1)
-                ]
-            )
-        )
+        sorted(set([factorial(i - j) * factorial(j) for i in range(jobs_amount + 1) for j in range(i // 2 + 1)]))
     )
     question = ET.Element("question", type="ddwtos")
 
